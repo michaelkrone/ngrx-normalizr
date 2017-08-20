@@ -23,7 +23,9 @@ npm i ngrx-normalizr @ngrx/store normalizr
 or
 `npm i @ngrx/store normalizr`
 
+
 ## Usage
+Also refer to the [Typedoc documentation](https://michaelkrone.github.io/ngrx-normalizr/).
 To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the `NormalizedState` interface. This will
 force the `ActionReducerMap` to implement a reducer which reduces the state to a `NormalizedState`.
 
@@ -32,7 +34,7 @@ import { ActionReducerMap } from '@ngrx/store';
 import { NormalizedState, reducer } from 'ngrx-normalizr';
 
 export interface State extends NormalizedState {
-	/* ... other state properties */
+  /* ... other state properties */
 }
 
 export const reducers: ActionReducerMap<State> = {
