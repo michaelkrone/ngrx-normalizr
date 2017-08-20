@@ -1,12 +1,14 @@
 {
 	"name": "ngrx-normalizr",
-	"version": "0.0.4",
+	"version": "1.0.0",
 	"description": "Normalizing state reducer for ngrx applications",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"prepublishOnly": "rm -rf ./dist && tsc && yarn docs",
-		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && touch ./docs/.nojekyll"
+		"prepublishOnly": "yarn tsc && yarn docs && yarn docs-github",
+		"tsc": "rm -rf ./dist && tsc",
+		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default",
+		"docs-github": "touch ./docs/.nojekyll"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
@@ -21,6 +23,8 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
+		"normalizr": "^3.2.3",
+		"@ngrx/store": "^4.0.3",
 		"@angular/core": "^4.3.5",
 		"rxjs": "^5.4.3",
 		"tslint": "^5.6.0",
