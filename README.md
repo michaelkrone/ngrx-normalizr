@@ -184,7 +184,7 @@ const getSelectedUser = createSelector(
 
 Michael Krone – [@DevDig](https://twitter.com/DevDig) – michael.krone@outlook.com
 
-Distributed under the XYZ license. See ``LICENSE`` for more information.
+Distributed under the MIT license. See [``LICENSE``](https://github.com/michaelkrone/ngrx-normalizr/blob/master/LICENSE) for more information.
 
 [https://github.com/michaelkrone/ngrx-normalizr](https://github.com/michaelkrone/ngrx-normalizr)
 
