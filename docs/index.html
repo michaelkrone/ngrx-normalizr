@@ -1,0 +1,327 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ngrx-normalizr</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">ngrx-normalizr</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> ngrx-normalizr</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="ngrx-normalizr">ngrx-normalizr</h1>
+				<blockquote>
+					<p>Managing <a href="http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html">normalized state</a> in <a href="https://github.com/ngrx/platform">ngrx</a> applications, transparently.</p>
+				</blockquote>
+				<p>This package provides a set of actions, reducers and selectors for handling normalization and denormalization of state data <strong>transparently</strong>.
+					<em>ngrx-normalizr</em> uses <a href="https://github.com/paularmstrong/normalizr">normalizr</a> for <a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#normalizedata-schema">normalizing</a> and <a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#denormalizeinput-schema-entities">denormalizing</a> data. All normalization and denormalization
+				is defined by the use of <a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#schema">normalizr schemas</a>, since that&#39;s the way normalizr works. This enables selectors to use a transparent and powerful projection of state data.</p>
+				<h2 id="installation">Installation</h2>
+				<p>To install this package:</p>
+				<pre><code class="lang-sh">yarn add ngrx-normalizr @ngrx/store normalizr
+</code></pre>
+				<p>or</p>
+				<pre><code class="lang-sh">npm i ngrx-normalizr @ngrx/store normalizr
+</code></pre>
+				<h3 id="peer-dependencies">Peer dependencies</h3>
+				<p><em>ngrx-normalizr</em> defines <a href="https://github.com/paularmstrong/normalizr">normalizr</a> and <a href="https://github.com/ngrx/platform/blob/master/docs/store/README.md">@ngrx-store</a> as its peer dependencies, so you need to install them if not present already:</p>
+				<p><code>yarn add @ngrx/store normalizr</code>
+					or
+				<code>npm i @ngrx/store normalizr</code></p>
+				<h2 id="usage">Usage</h2>
+				<p>To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the <code>NormalizedState</code> interface. This will
+				force the <code>ActionReducerMap</code> to implement a reducer which reduces the state to a <code>NormalizedState</code>.</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { ActionReducerMap } <span class="hljs-keyword">from</span> <span class="hljs-string">'@ngrx/store'</span>;
+<span class="hljs-keyword">import</span> { NormalizedState, reducer } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
+
+<span class="hljs-keyword">export</span> interface State extends NormalizedState {
+    <span class="hljs-comment">/* ... other state properties */</span>
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> reducers: ActionReducerMap&lt;State&gt; = {
+    <span class="hljs-string">'@@normalized'</span>: reducer,
+  <span class="hljs-comment">/* ... other state reducers */</span>
+};
+</code></pre>
+				<p>If there are no other state properties, it is sufficient to add the <em>ngrx-normalizr</em> reducer to your state reducers:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> reducers: ActionReducerMap&lt;NormalizedState&gt; = {
+    <span class="hljs-string">'@@normalized'</span>: reducer
+};
+</code></pre>
+				<p>Now you have a <code>@@normalized</code> state property which can hold the normalized data. Do not worry about the weird name,
+				you will not have to deal with it.</p>
+				<blockquote>
+					<p><em>ngrx-normalizr</em> itself does not rely on any <a href="https://angular.io">Angular</a> feature.</p>
+				</blockquote>
+				<h3 id="schemas">Schemas</h3>
+				<p><a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#schema">Schemas</a> define the relations of your data.
+					In order to normalize and denormalize data, normalizr needs to be feed with a schema. In this example, a user might have
+				an array of pets:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { schema } <span class="hljs-keyword">from</span> <span class="hljs-string">'normalizr'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pet</span> </span>{
+    id: string;
+    name: string;
+    type: <span class="hljs-string">'cat'</span> | <span class="hljs-string">'dog'</span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+    id: string;
+    name: string;
+    pets: Pet[];
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> petSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'pets'</span>);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> userSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'users'</span>, { <span class="hljs-attr">pets</span>: [petSchema] });
+</code></pre>
+				<h3 id="setting-data">Setting data</h3>
+				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>SetData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as a
+					payload. Entities are identified by their id attribute defined in the schema. Existing entities will be overwritten by the new data, other entities
+				will be added to the store.</p>
+				<h6 id="using-setdata-in-an-effect">Using <code>SetData</code> in an effect</h6>
+				<pre><code class="lang-javascript">@Effect()
+loadEffect$ = <span class="hljs-keyword">this</span>.actions$
+  .ofType(LOAD)
+  .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.get(<span class="hljs-string">'https://example.com/api/user'</span>))
+  .mergeMap(<span class="hljs-function">(<span class="hljs-params">result: User[]</span>) =&gt;</span> [
+    <span class="hljs-keyword">new</span> SetData&lt;User&gt;({ <span class="hljs-attr">data</span>: result, <span class="hljs-attr">schema</span>: userSchema }),
+    <span class="hljs-keyword">new</span> LoadSuccess(data)
+  ])
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
+</code></pre>
+				<h3 id="removing-data">Removing data</h3>
+				<p>To remove data, <em>ngrx-normalizr</em> provides a <code>RemoveData</code> action. This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as payload. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced
+				child will also be removed from the store.</p>
+				<h6 id="using-removedata-in-an-effect">Using <code>RemoveData</code> in an effect</h6>
+				<pre><code class="lang-javascript">@Effect()
+removeEffect$ = <span class="hljs-keyword">this</span>.actions$
+  .ofType(REMOVE)
+  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span>
+    <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`http://example.com/api/user/<span class="hljs-subst">${action.payload}</span>`</span>)
+  )
+  .mergeMap(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> [
+    <span class="hljs-keyword">new</span> RemoveData({ <span class="hljs-attr">id</span>: result.id, <span class="hljs-attr">schema</span>: userSchema, <span class="hljs-attr">removeChildren</span>: { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> } }),
+    <span class="hljs-keyword">new</span> RemoveSuccess()
+  ])
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> RemoveFail(err)));
+</code></pre>
+				<h3 id="feature-selectors">Feature selectors</h3>
+				<p>To transparently query data from the store, you can use the selectors provided by the <code>createSchemaSelectors</code> function.
+				It takes an entity schema to create schema bound selectors:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createSchemaSelectors } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'../classes/user'</span>;
+
+<span class="hljs-keyword">const</span> schemaSelectors = createSchemaSelectors&lt;User&gt;(userSchema);
+</code></pre>
+				<h3 id="-createschemaselectors-"><code>createSchemaSelectors</code></h3>
+				<p><code>createSchemaSelectors</code> will return schema bound selectors:</p>
+				<ul>
+					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities</li>
+					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns the all normalized (raw) state enities</li>
+					<li><code>entitiesProjector</code> - <code>(entities: {}) =&gt; T[]</code> Projector function for denormalizing a set of entities to an entity array</li>
+					<li><code>entityProjector</code> - <code>(entities: {}, id: string) =&gt; T</code> Projector function for denormalizing a single entity with the given id</li>
+				</ul>
+				<p>You might create several selectors with several schemas, i.e. a <em>listView</em> schema, which only denormalizes the data used in the list
+				view, and a <em>detailView</em> schema, to completely denormalize a given entity.</p>
+				<h4 id="using-schema-selectors">Using schema selectors</h4>
+				<p>Feature selectors can use the schema bound selectors and projector functions to query entity data from the store. To get all denormalized
+				entities, you might simply use the <code>getEntities</code> selector like this:</p>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// store.select(getUsers) will give you all denormalized user entities</span>
+<span class="hljs-keyword">const</span> getUsers = schemaSelectors.getEntities;
+</code></pre>
+				<p>Under the hood this does something similar to this:</p>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// equivalent alternative</span>
+<span class="hljs-keyword">const</span> getUsers = createSelector(
+  schemaSelectors.getNormalizedEntities,
+  schemaSelectors.entitiesProjector
+);
+</code></pre>
+				<p>The <code>entitiesProjector</code> simply takes an object of normalized entity data and applies the denormalization with the bound schema.
+					To query and denormalize specific data you can use the <em>@ngrx/store</em> <a href="https://github.com/ngrx/platform/blob/master/docs/store/selectors.md#createselector"><code>createSelectors</code></a> function and compose them with the schema bound
+				selectors:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getSelectedUserId = createSelector(
+  userFeatureSelector,
+  user.getSelectedId
+);
+
+<span class="hljs-comment">// store.select(getSelectedUser) will give you the denormalized selected user</span>
+<span class="hljs-keyword">const</span> getSelectedUser = createSelector(
+  schemaSelectors.getNormalizedEntities,
+  getSelectedUserId,
+  schemaSelectors.entityProjector
+);
+</code></pre>
+				<p><code>entityProjector</code> will simply take an object of denormalized entities and apply the denormalization with the bound schema only for the given id. Note that you might select data from the complete denormalized result, but this would force a denomalization of all schema bound entities:</p>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// alternative (denormalizing all user entities)</span>
+<span class="hljs-keyword">const</span> getSelectedUser = createSelector(
+  getUsers,
+  getSelectedId,
+  (entities, id) =&gt; entities.find(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.id === id)
+);
+</code></pre>
+				<h2 id="meta">Meta</h2>
+				<p>Michael Krone – <a href="https://twitter.com/DevDig">@DevDig</a> – michael.krone@outlook.com</p>
+				<p>Distributed under the XYZ license. See <code>LICENSE</code> for more information.</p>
+				<p><a href="https://github.com/michaelkrone/ngrx-normalizr">https://github.com/michaelkrone/ngrx-normalizr</a></p>
+				<h2 id="contributing">Contributing</h2>
+				<ol>
+					<li>Fork it (<a href="https://github.com/michaelkrone/ngrx-normalizr">https://github.com/michaelkrone/ngrx-normalizr</a>)</li>
+					<li>Create your feature branch (<code>git checkout -b feature/fooBar</code>)</li>
+					<li>Commit your changes (<code>git commit -am &#39;Add some fooBar&#39;</code>)</li>
+					<li>Push to the branch (<code>git push origin feature/fooBar</code>)</li>
+					<li>Create a new Pull Request</li>
+				</ol>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-external-module tsd-is-external">
+						<a href="modules/_actions_normalize_.html">"actions/normalize"</a>
+					</li>
+					<li class=" tsd-kind-external-module tsd-is-external">
+						<a href="modules/_reducers_normalize_.html">"reducers/normalize"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

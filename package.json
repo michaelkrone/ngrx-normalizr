@@ -1,0 +1,30 @@
+{
+	"name": "ngrx-normalizr",
+	"version": "0.0.1",
+	"description": "Normalizing state reducer for ngrx applications",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"prepublishOnly": "rm -rf ./dist && tsc",
+		"docs": "typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5"
+	},
+	"readme": "README.md",
+  "author": "Michael Krone <michael.krone@outlook.com>",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/michaelkrone/ngrx-normalizr"
+  },
+	"license": "MIT",
+	"peerDependencies": {
+		"normalizr": "^3.2.3",
+		"@ngrx/store": "^4.0.3"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@angular/core": "^4.3.5",
+		"rxjs": "^5.4.3",
+		"tslint": "^5.6.0",
+		"typescript": "^2.4.2",
+		"zone.js": "^0.8.16"
+	}
+}
