@@ -1,8 +1,10 @@
+# sources
+/src
+
 # compiled output
 /tmp
 /out-tsc
 /docs
-/src
 
 # dependencies
 /node_modules
@@ -32,6 +34,9 @@ npm-debug.log
 testem.log
 /typings
 yarn-error.log
+.editorconfig
+tslint.json
+tsconfig.json
 
 # System Files
 .DS_Store
