@@ -9,20 +9,17 @@ is defined by the use of [normalizr schemas](https://github.com/paularmstrong/no
 ## Installation
 To install this package:
 ```sh
-yarn add ngrx-normalizr @ngrx/store normalizr
-```
-or
-```sh
-npm i ngrx-normalizr @ngrx/store normalizr
+yarn add ngrx-normalizr
+npm i ngrx-normalizr
 ```
 
 ### Peer dependencies
 *ngrx-normalizr* defines [normalizr](https://github.com/paularmstrong/normalizr) and [@ngrx-store](https://github.com/ngrx/platform/blob/master/docs/store/README.md) as its peer dependencies, so you need to install them if not present already:
 
-`yarn add @ngrx/store normalizr`
-or
-`npm i @ngrx/store normalizr`
-
+```sh
+yarn add @ngrx/store normalizr
+npm i @ngrx/store normalizr
+```
 
 ## Usage
 Also refer to the [Typedoc documentation](https://michaelkrone.github.io/ngrx-normalizr/).
@@ -91,33 +88,34 @@ loadEffect$ = this.actions$
   .ofType(LOAD)
   .switchMap(action => this.http.get('https://example.com/api/user'))
   .mergeMap((result: User[]) => [
+    // dispatch to add data to the store
     new SetData<User>({ data: result, schema: userSchema }),
+    // dispatch to inform feature reducer
     new LoadSuccess(data)
   ])
   .catch(err => Observable.of(new LoadFail(err)));
 ```
 
 ### Removing data
-To remove data, *ngrx-normalizr* provides a `RemoveData` action. This action takes an object with `id`, `schema` and an optional `removeChildren` property as payload. The schema entity with the given id will be removed. If `removeChildren` is a map of the schema key mapped to an object property, all referenced
-child will also be removed from the store.
+To remove data, *ngrx-normalizr* provides a `RemoveData` action. This action takes an object with `id`, `schema` and an optional `removeChildren` property as payload. The schema entity with the given id will be removed. If `removeChildren` is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store.
 
 ###### Using `RemoveData` in an effect
 ```javascript
 @Effect()
 removeEffect$ = this.actions$
   .ofType(REMOVE)
-  .switchMap((action: Remove) =>
-    this.http.delete(`http://example.com/api/user/${action.payload}`)
-  )
+  .switchMap((action: Remove) => this.http.delete(`http://example.com/api/user/${action.payload}`))
   .mergeMap(result => [
+    // dispatch to remove data from the store
     new RemoveData({ id: result.id, schema: userSchema, removeChildren: { pets: 'pets' } }),
+    // dispatch to inform feature reducer
     new RemoveSuccess()
   ])
   .catch(err => Observable.of(new RemoveFail(err)));
 ```
 
-### Feature selectors
-To transparently query data from the store, you can use the selectors provided by the `createSchemaSelectors` function.
+### Schema selectors
+To transparently query data from the store from a feature module, you can use the selectors provided by the `createSchemaSelectors` function.
 It takes an entity schema to create schema bound selectors:
 
 ```javascript
@@ -127,7 +125,6 @@ import { User } from '../classes/user';
 const schemaSelectors = createSchemaSelectors<User>(userSchema);
 ```
 
-### `createSchemaSelectors`
 `createSchemaSelectors` will return schema bound selectors:
 
 * `getEntities` - ` MemoizedSelector<{}, T[]>` Returns all denormalized entities
