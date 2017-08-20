@@ -93,6 +93,12 @@
 								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported"><a href="_actions_normalize_.html#acion_namespace" class="tsd-kind-icon">ACION_<wbr>NAMESPACE</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section tsd-is-external">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external"><a href="_actions_normalize_.html#actioncreators" class="tsd-kind-icon">action<wbr>Creators</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -104,9 +110,114 @@
 					<div class="tsd-signature tsd-kind-icon">ACION_<wbr>NAMESPACE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"[@@Normalize]"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;[@@Normalize]&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/5bd710c/src/actions/normalize.ts#L4">actions/normalize.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/actions/normalize.ts#L11">actions/normalize.ts:11</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Internal action namespace</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
+					<a name="actioncreators" class="tsd-anchor"></a>
+					<h3>action<wbr>Creators</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">action<wbr>Creators&lt;T&gt;<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/actions/normalize.ts#L113">actions/normalize.ts:113</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a set of action creators for the <code>SetData</code> and <code>RemoveData</code> actions.
+									This is provided for convenience.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>schema: <span class="tsd-signature-type">Entity</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The schema the action creators should be bound to</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5>remove<wbr>Data<span class="tsd-signature-symbol">: </span>function</h5>
+									<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-type-literal tsd-is-external tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon">remove<wbr>Data<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, removeChildren<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_actions_normalize_.schemamap.html" class="tsd-signature-type">SchemaMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_actions_normalize_.removedata.html" class="tsd-signature-type">RemoveData</a></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<aside class="tsd-sources">
+												<ul>
+													<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/actions/normalize.ts#L126">actions/normalize.ts:126</a></li>
+												</ul>
+											</aside>
+											<div class="tsd-comment tsd-typography">
+												<div class="lead">
+													<p>Action creator for the <code>RemoveData</code> action.</p>
+												</div>
+											</div>
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5>id: <span class="tsd-signature-type">string</span></h5>
+												</li>
+												<li>
+													<h5><span class="tsd-flag ts-flagOptional">Optional</span> removeChildren: <a href="../interfaces/_actions_normalize_.schemamap.html" class="tsd-signature-type">SchemaMap</a></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <a href="../classes/_actions_normalize_.removedata.html" class="tsd-signature-type">RemoveData</a></h4>
+											<p>A new instance of the <code>RemoveData</code> action with the given schema set.</p>
+										</li>
+								</ul>        </li>
+								<li class="tsd-parameter">
+									<h5>set<wbr>Data<span class="tsd-signature-symbol">: </span>function</h5>
+									<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-type-literal tsd-is-external tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon">set<wbr>Data<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_actions_normalize_.setdata.html" class="tsd-signature-type">SetData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<aside class="tsd-sources">
+												<ul>
+													<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/actions/normalize.ts#L119">actions/normalize.ts:119</a></li>
+												</ul>
+											</aside>
+											<div class="tsd-comment tsd-typography">
+												<div class="lead">
+													<p>Action creator for the <code>SetData</code> action.</p>
+												</div>
+											</div>
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5>data: <span class="tsd-signature-type">Array</span></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <a href="../classes/_actions_normalize_.setdata.html" class="tsd-signature-type">SetData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+											<p>A new instance of the <code>SetData</code> action with the given schema set.</p>
+										</li>
+								</ul>        </li>
+							</ul>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -158,6 +269,9 @@
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported">
 						<a href="_actions_normalize_.html#acion_namespace" class="tsd-kind-icon">ACION_<wbr>NAMESPACE</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
+						<a href="_actions_normalize_.html#actioncreators" class="tsd-kind-icon">action<wbr>Creators</a>
 					</li>
 				</ul>
 			</nav>

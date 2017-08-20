@@ -78,35 +78,32 @@ npm i ngrx-normalizr
 </code></pre>
 				<h3 id="peer-dependencies">Peer dependencies</h3>
 				<p><em>ngrx-normalizr</em> defines <a href="https://github.com/paularmstrong/normalizr">normalizr</a> and <a href="https://github.com/ngrx/platform/blob/master/docs/store/README.md">@ngrx-store</a> as its peer dependencies, so you need to install them if not present already:</p>
+				<blockquote>
+					<p><em>ngrx-normalizr</em> itself does not rely on any <a href="https://angular.io">Angular</a> feature.</p>
+				</blockquote>
 				<pre><code class="lang-sh">yarn add @ngrx/store normalizr
 npm i @ngrx/store normalizr
 </code></pre>
 				<h2 id="usage">Usage</h2>
 				<p>Also refer to the <a href="https://michaelkrone.github.io/ngrx-normalizr/">Typedoc documentation</a>.
-					To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the <code>NormalizedState</code> interface. This will
-				force the <code>ActionReducerMap</code> to implement a reducer which reduces the state to a <code>NormalizedState</code>.</p>
+				To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the <code>NormalizedState</code> interface. This will force the <code>ActionReducerMap</code> to implement a reducer which reduces the state to a <code>NormalizedState</code>.</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { ActionReducerMap } <span class="hljs-keyword">from</span> <span class="hljs-string">'@ngrx/store'</span>;
-<span class="hljs-keyword">import</span> { NormalizedState, reducer } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
+<span class="hljs-keyword">import</span> { NormalizedState, normalized } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
 
 <span class="hljs-keyword">export</span> interface State extends NormalizedState {
   <span class="hljs-comment">/* ... other state properties */</span>
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> reducers: ActionReducerMap&lt;State&gt; = {
-    <span class="hljs-string">'@@normalized'</span>: reducer,
+    normalized,
   <span class="hljs-comment">/* ... other state reducers */</span>
 };
 </code></pre>
 				<p>If there are no other state properties, it is sufficient to add the <em>ngrx-normalizr</em> reducer to your state reducers:</p>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> reducers: ActionReducerMap&lt;NormalizedState&gt; = {
-    <span class="hljs-string">'@@normalized'</span>: reducer
-};
+				<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> reducers: ActionReducerMap&lt;NormalizedState&gt; = { normalized };
 </code></pre>
-				<p>Now you have a <code>@@normalized</code> state property which can hold the normalized data. Do not worry about the weird name,
+				<p>Now you have a <code>normalized</code> state property which can will the normalized data. Do not worry about the weird name,
 				you will not have to deal with it.</p>
-				<blockquote>
-					<p><em>ngrx-normalizr</em> itself does not rely on any <a href="https://angular.io">Angular</a> feature.</p>
-				</blockquote>
 				<h3 id="schemas">Schemas</h3>
 				<p><a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#schema">Schemas</a> define the relations of your data.
 					In order to normalize and denormalize data, normalizr needs to be feed with a schema. In this example, a user might have
@@ -128,25 +125,28 @@ npm i @ngrx/store normalizr
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> petSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'pets'</span>);
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> userSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'users'</span>, { <span class="hljs-attr">pets</span>: [petSchema] });
 </code></pre>
+				<h2 id="set-and-remove-data">Set and remove data</h2>
+				<p>Actions are used to set data in - and remove data from - the normalized store.</p>
 				<h3 id="setting-data">Setting data</h3>
 				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>SetData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as a
-					payload. Entities are identified by their id attribute defined in the schema. Existing entities will be overwritten by the new data, other entities
-				will be added to the store.</p>
+					payload. Entities are identified by their id attribute set in the passed schema.
+				Existing entities will be overwritten by updated data, new entities will be added to the store.</p>
 				<h6 id="using-setdata-in-an-effect">Using <code>SetData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
 loadEffect$ = <span class="hljs-keyword">this</span>.actions$
   .ofType(LOAD)
   .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.get(<span class="hljs-string">'https://example.com/api/user'</span>))
-  .mergeMap(<span class="hljs-function">(<span class="hljs-params">result: User[]</span>) =&gt;</span> [
+  .mergeMap(<span class="hljs-function">(<span class="hljs-params">data: User[]</span>) =&gt;</span> [
     <span class="hljs-comment">// dispatch to add data to the store</span>
-    <span class="hljs-keyword">new</span> SetData&lt;User&gt;({ <span class="hljs-attr">data</span>: result, <span class="hljs-attr">schema</span>: userSchema }),
+    <span class="hljs-keyword">new</span> SetData&lt;User&gt;({ data, schema }),
     <span class="hljs-comment">// dispatch to inform feature reducer</span>
     <span class="hljs-keyword">new</span> LoadSuccess(data)
   ])
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
 </code></pre>
 				<h3 id="removing-data">Removing data</h3>
-				<p>To remove data, <em>ngrx-normalizr</em> provides a <code>RemoveData</code> action. This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as payload. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store.</p>
+				<p>To remove data, <em>ngrx-normalizr</em> provides a <code>RemoveData</code> action.
+				This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as payload. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.</p>
 				<h6 id="using-removedata-in-an-effect">Using <code>RemoveData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
 removeEffect$ = <span class="hljs-keyword">this</span>.actions$
@@ -154,14 +154,45 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
   .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`http://example.com/api/user/<span class="hljs-subst">${action.payload}</span>`</span>))
   .mergeMap(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> [
     <span class="hljs-comment">// dispatch to remove data from the store</span>
-    <span class="hljs-keyword">new</span> RemoveData({ <span class="hljs-attr">id</span>: result.id, <span class="hljs-attr">schema</span>: userSchema, <span class="hljs-attr">removeChildren</span>: { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> } }),
+    <span class="hljs-keyword">new</span> RemoveData({ <span class="hljs-attr">id</span>: result.id, schema, <span class="hljs-attr">removeChildren</span>: { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> } }),
     <span class="hljs-comment">// dispatch to inform feature reducer</span>
     <span class="hljs-keyword">new</span> RemoveSuccess()
   ])
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> RemoveFail(err)));
 </code></pre>
-				<h3 id="schema-selectors">Schema selectors</h3>
-				<p>To transparently query data from the store from a feature module, you can use the selectors provided by the <code>createSchemaSelectors</code> function.
+				<h3 id="action-creators">Action creators</h3>
+				<p>For convenience, <em>ngrx-normalizr</em> provides an <code>actionCreators</code> function which will return an object with following schema bound action creators:</p>
+				<ul>
+					<li><code>setData</code> - <code>(data: T[]) =&gt; SetData&lt;T&gt;</code></li>
+					<li><code>removeData</code> - <code>(id: string, removeChildren?: SchemaMap) =&gt; RemoveData</code></li>
+				</ul>
+				<p>Action creators could be exported along whith other feature actions:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { actionCreators } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
+
+<span class="hljs-keyword">const</span> creators = actionCreators&lt;User&gt;(userSchema);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addUserData = creators.addData;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> removeUserData = creators.removeData;
+</code></pre>
+				<p>Using the action creator in an Effect class:</p>
+				<h6 id="using-the-removeuserdata-action-creator-in-an-effect">Using the <code>removeUserData</code> action creator in an effect</h6>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { removeUserData } <span class="hljs-keyword">from</span> <span class="hljs-string">'../actions'</span>;
+
+@Effect()
+removeEffect$ = <span class="hljs-keyword">this</span>.actions$
+  .ofType(REMOVE)
+  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`http://example.com/api/user/<span class="hljs-subst">${action.payload}</span>`</span>))
+  .mergeMap(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> [
+    <span class="hljs-comment">// dispatch to remove data from the store</span>
+    removeUserData(id: result.id, { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> }),
+    <span class="hljs-comment">// dispatch to inform feature reducer</span>
+    <span class="hljs-keyword">new</span> RemoveSuccess()
+  ])
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> RemoveFail(err)));
+</code></pre>
+				<h2 id="query-state-data">Query state data</h2>
+				<p><em>ngrx-normalizr</em> provides two simple selectors and two simple projector functions to query the state and project/denormalize the result.</p>
+				<h3 id="creating-schema-selectors">Creating Schema selectors</h3>
+				<p>To transparently query data from the store from a feature module, selectors are provided by the <code>createSchemaSelectors</code> function.
 				It takes an entity schema to create schema bound selectors:</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createSchemaSelectors } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
 <span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'../classes/user'</span>;
@@ -170,17 +201,17 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 </code></pre>
 				<p><code>createSchemaSelectors</code> will return schema bound selectors:</p>
 				<ul>
-					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities</li>
-					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns the all normalized (raw) state enities</li>
-					<li><code>entitiesProjector</code> - <code>(entities: {}) =&gt; T[]</code> Projector function for denormalizing a set of entities to an entity array</li>
-					<li><code>entityProjector</code> - <code>(entities: {}, id: string) =&gt; T</code> Projector function for denormalizing a single entity with the given id</li>
+					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities for the schema</li>
+					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns all normalized (raw) state enities of every schema (the whole entities state)</li>
+					<li><code>entitiesProjector</code> - <code>(entities: {}) =&gt; T[]</code> Projector function for denormalizing a the set of normalized entities to an denormalized entity array</li>
+					<li><code>entityProjector</code> - <code>(entities: {}, id: string) =&gt; T</code> Projector function for denormalizing a single normalized entity with the given id</li>
 				</ul>
 				<p>You might create several selectors with several schemas, i.e. a <em>listView</em> schema, which only denormalizes the data used in the list
 				view, and a <em>detailView</em> schema, to completely denormalize a given entity.</p>
-				<h4 id="using-schema-selectors">Using schema selectors</h4>
+				<h3 id="using-schema-selectors">Using schema selectors</h3>
 				<p>Feature selectors can use the schema bound selectors and projector functions to query entity data from the store. To get all denormalized
 				entities, you might simply use the <code>getEntities</code> selector like this:</p>
-				<pre><code class="lang-javascript"><span class="hljs-comment">// store.select(getUsers) will give you all denormalized user entities</span>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// store.select(getUsers) will give all denormalized user entities</span>
 <span class="hljs-keyword">const</span> getUsers = schemaSelectors.getEntities;
 </code></pre>
 				<p>Under the hood this does something similar to this:</p>
@@ -190,27 +221,29 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
   schemaSelectors.entitiesProjector
 );
 </code></pre>
-				<p>The <code>entitiesProjector</code> simply takes an object of normalized entity data and applies the denormalization with the bound schema.
-					To query and denormalize specific data you can use the <em>@ngrx/store</em> <a href="https://github.com/ngrx/platform/blob/master/docs/store/selectors.md#createselector"><code>createSelectors</code></a> function and compose them with the schema bound
+				<p>The <code>entitiesProjector</code> simply takes an object of normalized entity data and applies the denormalization with the bound schema.</p>
+				<h4 id="composing-schema-selectors">Composing schema selectors</h4>
+				<p>To query and denormalize specific data you can use the <em>@ngrx/store</em> <a href="https://github.com/ngrx/platform/blob/master/docs/store/selectors.md#createselector"><code>createSelectors</code></a> function and compose them with the schema bound
 				selectors:</p>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getSelectedUserId = createSelector(
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createSelector } <span class="hljs-keyword">from</span> <span class="hljs-string">'@ngrx/store'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getSelectedUserId = createSelector(
   userFeatureSelector,
   user.getSelectedId
 );
 
-<span class="hljs-comment">// store.select(getSelectedUser) will give you the denormalized selected user</span>
+<span class="hljs-comment">// store.select(getSelectedUser) will give the denormalized selected user</span>
 <span class="hljs-keyword">const</span> getSelectedUser = createSelector(
   schemaSelectors.getNormalizedEntities,
   getSelectedUserId,
   schemaSelectors.entityProjector
 );
 </code></pre>
-				<p><code>entityProjector</code> will simply take an object of denormalized entities and apply the denormalization with the bound schema only for the given id. Note that you might select data from the complete denormalized result, but this would force a denomalization of all schema bound entities:</p>
-				<pre><code class="lang-javascript"><span class="hljs-comment">// alternative (denormalizing all user entities)</span>
-<span class="hljs-keyword">const</span> getSelectedUser = createSelector(
+				<p><code>entityProjector</code> will simply take an object of denormalized entities and apply the denormalization with the bound schema only for the given id. Note that you might also select data from the denormalized result and providing your own selector:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> getSelectedUserWithPetsOnly = createSelector(
   getUsers,
   getSelectedId,
-  (entities, id) =&gt; entities.find(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.id === id)
+  (entities, id) =&gt; entities.find(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.id === id &amp;&amp; e.pets.length &gt; <span class="hljs-number">0</span>)
 );
 </code></pre>
 				<h2 id="meta">Meta</h2>
@@ -223,7 +256,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 					<li>Create your feature branch (<code>git checkout -b feature/fooBar</code>)</li>
 					<li>Commit your changes (<code>git commit -am &#39;Add some fooBar&#39;</code>)</li>
 					<li>Push to the branch (<code>git push origin feature/fooBar</code>)</li>
-					<li>Create a new Pull Request</li>
+					<li>Create a new <a href="https://github.com/michaelkrone/ngrx-normalizr/compare?expand=1">Pull Request</a></li>
 				</ol>
 			</div>
 		</div>

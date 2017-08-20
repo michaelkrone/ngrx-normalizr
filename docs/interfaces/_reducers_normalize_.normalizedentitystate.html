@@ -72,7 +72,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The normalized state, representing a normalizr result</p>
+						<p>The normalized state, representing a <code>normalizr.normalize</code> result.
+							Can be selected by the provided <code>getNormalizedEntities</code> and <code>getResult</code>
+						selectors.</p>
 					</div>
 				</div>
 			</section>
@@ -106,12 +108,13 @@
 					<div class="tsd-signature tsd-kind-icon">entities<span class="tsd-signature-symbol">:</span> <a href="_reducers_normalize_.entitymap.html" class="tsd-signature-type">EntityMap</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/5bd710c/src/reducers/normalize.ts#L33">reducers/normalize.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/reducers/normalize.ts#L50">reducers/normalize.ts:50</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The normalized result</p>
+							<p>The normalized entities. Should be passed to all projector functions
+							to enable access to all entities needed.</p>
 						</div>
 					</div>
 				</section>
@@ -121,12 +124,14 @@
 					<div class="tsd-signature tsd-kind-icon">result<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/5bd710c/src/reducers/normalize.ts#L31">reducers/normalize.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/72c34ee/src/reducers/normalize.ts#L44">reducers/normalize.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The original sorting of the unnormalized data</p>
+							<p>The original sorting of the unnormalized data.
+								Holds all id&#39;s of the last set operation in original order.
+							Can be used to restore the original sorting of entities</p>
 						</div>
 					</div>
 				</section>
@@ -178,7 +183,7 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
 						<a href="_reducers_normalize_.normalizedstate.html" class="tsd-kind-icon">Normalized<wbr>State</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external">
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported">
 						<a href="../modules/_reducers_normalize_.html#state_key" class="tsd-kind-icon">STATE_<wbr>KEY</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external">
@@ -206,7 +211,7 @@
 						<a href="../modules/_reducers_normalize_.html#getnormalizedstate" class="tsd-kind-icon">get<wbr>Normalized<wbr>State</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-external">
-						<a href="../modules/_reducers_normalize_.html#reducer" class="tsd-kind-icon">reducer</a>
+						<a href="../modules/_reducers_normalize_.html#normalized" class="tsd-kind-icon">normalized</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported">
 						<a href="../modules/_reducers_normalize_.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a>
