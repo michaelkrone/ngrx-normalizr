@@ -6,7 +6,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"prepublishOnly": "rm -rf ./dist && tsc && yarn docs",
-		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme minimal && touch ./docs/.nojekyll"
+		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && touch ./docs/.nojekyll"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
