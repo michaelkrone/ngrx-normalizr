@@ -1,4 +1,7 @@
 # ngrx-normalizr
+
+[![Build Status](https://travis-ci.org/gastro-instruments/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/gastro-instruments/ngrx-normalizr)
+
 > Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
 
