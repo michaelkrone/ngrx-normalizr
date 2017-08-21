@@ -122,6 +122,14 @@ describe('reducers', () => {
 		});
 	});
 
+	describe('getResult', () => {
+		it('should return the result', () => {
+			const state = reducer.normalized(undefined, addAction1);
+			const result = reducer.getResult({ normalized: state });
+			result.should.eql(state.result);
+		});
+	});
+
 	describe('create schema selectors', () => {
 		it('should exist as a function', () => {
 			reducer.createSchemaSelectors.should.be.a.Function();
@@ -135,11 +143,39 @@ describe('reducers', () => {
 			selectrs.getEntities.should.be.a.Function();
 		});
 
+		describe('getNormalizedEntitities', () => {
+			it('should return the entities state', () => {
+				let state = reducer.normalized(undefined, addAction1);
+				const selectrs = reducer.createSchemaSelectors(mySchema);
+				const denormalized = selectrs.getNormalizedEntities({
+					normalized: state
+				});
+				denormalized.should.be.an.Object();
+				denormalized.should.have.properties('parent', 'child');
+			});
+		});
+
+		describe('getEntities', () => {
+			it('should return the denormalized entities', () => {
+				let state = reducer.normalized(undefined, addAction1);
+				const selectrs = reducer.createSchemaSelectors(mySchema);
+				const denormalized = selectrs.getEntities({
+					normalized: state
+				});
+				denormalized.should.be.an.Array();
+				denormalized[0].should.eql(data[0]);
+			});
+		});
+	});
+
+	describe('projector functions', () => {
 		it('should return schema projectors', () => {
 			const prjktrs = reducer.createSchemaSelectors(mySchema);
 			prjktrs.should.have.properties('entityProjector', 'entitiesProjector');
 			prjktrs.entityProjector.should.be.a.Function();
 			prjktrs.entitiesProjector.should.be.a.Function();
 		});
+
+		xit('should project the given schema to a denormalized entity', () => {});
 	});
 });
