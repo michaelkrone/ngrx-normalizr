@@ -5,12 +5,12 @@
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"test": "./node_modules/.bin/karma start",
+		"watch": "./node_modules/.bin/karma start",
 		"prepublishOnly": "yarn tsc && yarn docs && yarn docs-github",
 		"tsc": "rm -rf ./dist && tsc",
 		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default",
 		"docs-github": "touch ./docs/.nojekyll",
-		"ci": "yarn tsc && ./node_modules/.bin/karma start karma-ci.conf.js"
+		"test": "yarn tsc && ./node_modules/.bin/karma start karma-ci.conf.js"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
