@@ -112,7 +112,7 @@ export function normalized(
 					removeChildren
 				).map(([key, entityProperty]: [string, string]) => {
 					const child = entity[entityProperty];
-					if (child && schema.schema[key] && entities[key]) {
+					if (child && schema.schema[entityProperty] && entities[key]) {
 						const ids = Array.isArray(child) ? child : [child];
 						ids.forEach((oldId: string) => delete entities[key][oldId]);
 					}
