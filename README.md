@@ -75,7 +75,7 @@ export const petSchema = new schema.Entity('pets');
 export const userSchema = new schema.Entity('users', { pets: [petSchema] });
 ```
 
-## Set and remove data
+## Add, set and remove data
 Actions are used to set data in - and remove data from - the normalized store.
 
 ### Adding data
