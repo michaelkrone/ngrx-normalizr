@@ -65,6 +65,7 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="ngrx-normalizr">ngrx-normalizr</h1>
+				<p><a href="https://travis-ci.org/michaelkrone/ngrx-normalizr"><img src="https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master" alt="Build Status"></a></p>
 				<blockquote>
 					<p>Managing <a href="http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html">normalized state</a> in <a href="https://github.com/ngrx/platform">ngrx</a> applications, transparently.</p>
 				</blockquote>
@@ -125,25 +126,26 @@ npm i @ngrx/store normalizr
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> petSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'pets'</span>);
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> userSchema = <span class="hljs-keyword">new</span> schema.Entity(<span class="hljs-string">'users'</span>, { <span class="hljs-attr">pets</span>: [petSchema] });
 </code></pre>
-				<h2 id="set-and-remove-data">Set and remove data</h2>
+				<h2 id="add-set-and-remove-data">Add, set and remove data</h2>
 				<p>Actions are used to set data in - and remove data from - the normalized store.</p>
-				<h3 id="setting-data">Setting data</h3>
-				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>SetData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as a
-					payload. Entities are identified by their id attribute set in the passed schema.
+				<h3 id="adding-data">Adding data</h3>
+				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>AddData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as a payload. Entities are identified by their id attribute set in the passed schema.
 				Existing entities will be overwritten by updated data, new entities will be added to the store.</p>
-				<h6 id="using-setdata-in-an-effect">Using <code>SetData</code> in an effect</h6>
+				<h6 id="using-adddata-in-an-effect">Using <code>AddData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
 loadEffect$ = <span class="hljs-keyword">this</span>.actions$
   .ofType(LOAD)
   .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.get(<span class="hljs-string">'https://example.com/api/user'</span>))
   .mergeMap(<span class="hljs-function">(<span class="hljs-params">data: User[]</span>) =&gt;</span> [
     <span class="hljs-comment">// dispatch to add data to the store</span>
-    <span class="hljs-keyword">new</span> SetData&lt;User&gt;({ data, schema }),
+    <span class="hljs-keyword">new</span> AddData&lt;User&gt;({ data, schema }),
     <span class="hljs-comment">// dispatch to inform feature reducer</span>
     <span class="hljs-keyword">new</span> LoadSuccess(data)
   ])
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
 </code></pre>
+				<h3 id="setting-data">Setting data</h3>
+				<p>The <code>SetData</code> action will overwrite all entities for a given schema with the normalized entities of the <code>data</code> property of the action payload.</p>
 				<h3 id="removing-data">Removing data</h3>
 				<p>To remove data, <em>ngrx-normalizr</em> provides a <code>RemoveData</code> action.
 				This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as payload. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.</p>
@@ -164,12 +166,14 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 				<p>For convenience, <em>ngrx-normalizr</em> provides an <code>actionCreators</code> function which will return an object with following schema bound action creators:</p>
 				<ul>
 					<li><code>setData</code> - <code>(data: T[]) =&gt; SetData&lt;T&gt;</code></li>
+					<li><code>addData</code> - <code>(data: T[]) =&gt; AddData&lt;T&gt;</code></li>
 					<li><code>removeData</code> - <code>(id: string, removeChildren?: SchemaMap) =&gt; RemoveData</code></li>
 				</ul>
 				<p>Action creators could be exported along whith other feature actions:</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { actionCreators } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
 
 <span class="hljs-keyword">const</span> creators = actionCreators&lt;User&gt;(userSchema);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setUserData = creators.setData;
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addUserData = creators.addData;
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> removeUserData = creators.removeData;
 </code></pre>

@@ -6,9 +6,9 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"watch": "./node_modules/.bin/karma start",
-		"prepublishOnly": "yarn tsc && yarn docs && yarn docs-github",
+		"prepublishOnly": "yarn tsc",
 		"tsc": "rm -rf ./dist && tsc",
-		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default",
+		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
 		"docs-github": "touch ./docs/.nojekyll",
 		"test": "yarn tsc && ./node_modules/.bin/karma start karma-ci.conf.js"
 	},
