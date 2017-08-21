@@ -15,7 +15,7 @@ const STATE_KEY = 'normalized';
 /**
  * Interface describing the entities propery of a normalized state.
  * A map of schema keys wich map to a map of entity id's to entity data.
- * This corresponds to the `entities` property of a `normalizr.normalize` result. *
+ * This corresponds to the `entities` property of a `normalizr.normalize` result.
  */
 export interface EntityMap {
 	[key: string]: { [id: string]: any };
@@ -60,9 +60,13 @@ const initialState: NormalizedEntityState = {
 
 /**
  * The normalizing reducer function which will handle actions with the types
- * `NormalizeActionTypes.SET_DATA` and `NormalizeActionTypes.REMOVE_DATA`.
+ * `NormalizeActionTypes.SET_DATA`, `NormalizeActionTypes.ADD_DATA` and `NormalizeActionTypes.REMOVE_DATA`.
  *
  * On an `NormalizeActionTypes.SET_DATA` action:
+ *
+ * All entities and childs of the given schema will be replaced with the new entities.
+ *
+ * On an `NormalizeActionTypes.ADD_DATA` action:
  *
  * Entities are identified by their id attribute set in the schema passed by the payload.
  * Existing entities will be overwritten by updated data, new entities will be added to the store.
@@ -75,7 +79,7 @@ const initialState: NormalizedEntityState = {
  * of the entity will be read by the object propety name and removed by the schema key.
  *
  * @param state The current state
- * @param action The dispatched action, one of `NormalizeActionTypes.SET_DATA` or `NormalizeActionTypes.REMOVE_DATA`.
+ * @param action The dispatched action, one of `NormalizeActionTypes.ADD_DATA` or `NormalizeActionTypes.REMOVE_DATA`.
  */
 export function normalized(
 	state: NormalizedEntityState = initialState,
@@ -83,6 +87,19 @@ export function normalized(
 ) {
 	switch (action.type) {
 		case NormalizeActionTypes.SET_DATA: {
+			const { data, schema } = action.payload;
+			const { result, entities } = normalize(data, [schema]);
+
+			return {
+				result,
+				entities: {
+					...state.entities,
+					...entities
+				}
+			};
+		}
+
+		case NormalizeActionTypes.ADD_DATA: {
 			const { data, schema } = action.payload;
 			const { result, entities } = normalize(data, [schema]);
 
@@ -188,6 +205,10 @@ export function createSchemaSelectors<T>(schema: schema.Entity) {
 	};
 }
 
+/**
+ * Create a schema bound selector which denormalizes all entities with the given schema.
+ * @param schema The schema to bind this selector to
+ */
 function createEntitiesSelector<T>(
 	schema: schema.Entity
 ): MemoizedSelector<{}, T[]> {
@@ -197,15 +218,27 @@ function createEntitiesSelector<T>(
 	);
 }
 
+/**
+ * Create a schema bound projector function to denormalize a single entity.
+ * @param schema The schema to bind this selector to
+ */
 function createEntityProjector<T>(schema: schema.Entity) {
 	return (entities: {}, id: string) =>
 		createDenormalizer(schema)(entities, id) as T;
 }
 
+/**
+ * Create a schema bound projector function to denormalize an object of normalized entities
+ * @param schema The schema to bind this selector to
+ */
 function createEntitiesProjector<T>(schema: schema.Entity) {
 	return (entities: {}) => createDenormalizer(schema)(entities) as T[];
 }
 
+/**
+ * Create a schema bound denormalizer.
+ * @param schema The schema to bind this selector to
+ */
 function createDenormalizer(schema: schema.Entity) {
 	const key = schema.key;
 	return (entities: { [key: string]: {} }, id?: string) => {

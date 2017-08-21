@@ -19,7 +19,7 @@ export interface SchemaMap {
 }
 
 /**
- * Base interface for `SetData` and `RemoveData` action payload.
+ * Base interface for `AddData` and `RemoveData` action payload.
  */
 export interface SchemaPayload {
 	/**
@@ -29,10 +29,10 @@ export interface SchemaPayload {
 }
 
 /**
- * Typed Interface for the payload of the `SetData` action.
+ * Typed Interface for the payload of the `AddData` action.
  * Accepts an typed array of entities to be added to the store.
  */
-export interface NormalizeSetDataPayload<T> extends SchemaPayload {
+export interface NormalizeDataPayload<T> extends SchemaPayload {
 	/**
    * The array of entities which should be normalized and added to the store.
    */
@@ -50,7 +50,7 @@ export interface NormalizeRemovePayload extends SchemaPayload {
 	id: string;
 
 	/**
-   * If set and maps to valid schema keys and propety names,
+   * If add and maps to valid schema keys and propety names,
    * children referenced by the entity will be removed
    */
 	removeChildren?: SchemaMap;
@@ -66,14 +66,19 @@ export class NormalizeActionTypes {
 	static readonly SET_DATA = `${ACION_NAMESPACE} Set Data`;
 
 	/**
+   * Action type of the `AddData` action.
+   */
+	static readonly ADD_DATA = `${ACION_NAMESPACE} Add Data`;
+
+	/**
    * Action type of the `RemoveData` action.
    */
 	static readonly REMOVE_DATA = `${ACION_NAMESPACE} Remove Data`;
 }
 
 /**
- * Action for setting/updating data to the store.
- * Also see `NormalizeSetDataPayload`.
+ * Action for settings denormalized entities in the store.
+ * Also see `NormalizeDataPayload`.
  */
 export class SetData<T> implements Action {
 	/**
@@ -85,7 +90,24 @@ export class SetData<T> implements Action {
    * SetData Constructor
    * @param payload The action payload used in the reducer
    */
-	constructor(public payload: NormalizeSetDataPayload<T>) {}
+	constructor(public payload: NormalizeDataPayload<T>) {}
+}
+
+/**
+ * Action for adding/updating data to the store.
+ * Also see `NormalizeDataPayload`.
+ */
+export class AddData<T> implements Action {
+	/**
+   * The action type: `NormalizeActionTypes.ADD_DATA`
+   */
+	readonly type = NormalizeActionTypes.ADD_DATA;
+
+	/**
+   * AddData Constructor
+   * @param payload The action payload used in the reducer
+   */
+	constructor(public payload: NormalizeDataPayload<T>) {}
 }
 
 /**
@@ -106,7 +128,7 @@ export class RemoveData implements Action {
 }
 
 /**
- * Create a set of action creators for the `SetData` and `RemoveData` actions.
+ * Create a add of action creators for the `AddData` and `RemoveData` actions.
  * This is provided for convenience.
  * @param schema The schema the action creators should be bound to
  */
@@ -114,14 +136,21 @@ export function actionCreators<T>(schema: schema.Entity) {
 	return {
 		/**
      * Action creator for the `SetData` action.
-     * @returns A new instance of the `SetData` action with the given schema set.
+     * @returns A new instance of the `SetData` action with the given schema.
      */
-		setData: (data: NormalizeSetDataPayload<T>['data']) =>
+		setData: (data: NormalizeDataPayload<T>['data']) =>
 			new SetData<T>({ data, schema }),
 
 		/**
+     * Action creator for the `AddData` action.
+     * @returns A new instance of the `AddData` action with the given schema.
+     */
+		addData: (data: NormalizeDataPayload<T>['data']) =>
+			new AddData<T>({ data, schema }),
+
+		/**
      * Action creator for the `RemoveData` action.
-     * @returns A new instance of the `RemoveData` action with the given schema set.
+     * @returns A new instance of the `RemoveData` action with the given schema.
      */
 		removeData: (
 			id: NormalizeRemovePayload['id'],
