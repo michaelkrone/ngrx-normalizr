@@ -13,7 +13,7 @@ module.exports = function(config) {
 			require('karma-jasmine'),
 			require('karma-typescript'),
 			require('karma-chrome-launcher'),
-			require('karma-firefox-launcher'),
+			require('karma-phantomjs-launcher'),
 			require('karma-jasmine-html-reporter'),
 			require('karma-coverage-istanbul-reporter')
 		],

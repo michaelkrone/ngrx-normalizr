@@ -10,7 +10,7 @@
 		"tsc": "rm -rf ./dist && tsc",
 		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default",
 		"docs-github": "touch ./docs/.nojekyll",
-		"ci": "./node_modules/.bin/karma start --single-run --browsers Firefox"
+		"ci": "yarn tsc && ./node_modules/.bin/karma start --single-run --browsers PhantomJS"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
@@ -40,6 +40,7 @@
 		"karma-firefox-launcher": "^1.0.1",
 		"karma-jasmine": "^1.1.0",
 		"karma-jasmine-html-reporter": "^0.2.2",
+		"karma-phantomjs-launcher": "^1.0.4",
 		"karma-typescript": "^3.0.5",
 		"normalizr": "^3.2.3",
 		"rxjs": "^5.4.3",

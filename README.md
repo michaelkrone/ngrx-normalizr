@@ -75,12 +75,11 @@ export const userSchema = new schema.Entity('users', { pets: [petSchema] });
 ## Set and remove data
 Actions are used to set data in - and remove data from - the normalized store.
 
-### Setting data
-To add data and automatically normalize it, *ngrx-normalizr* provides a `SetData` action. This action takes an object with `data` and `schema` as a
-payload. Entities are identified by their id attribute set in the passed schema.
+### Adding data
+To add data and automatically normalize it, *ngrx-normalizr* provides a `AddData` action. This action takes an object with `data` and `schema` as a payload. Entities are identified by their id attribute set in the passed schema.
 Existing entities will be overwritten by updated data, new entities will be added to the store.
 
-###### Using `SetData` in an effect
+###### Using `AddData` in an effect
 ```javascript
 @Effect()
 loadEffect$ = this.actions$
@@ -88,12 +87,15 @@ loadEffect$ = this.actions$
   .switchMap(action => this.http.get('https://example.com/api/user'))
   .mergeMap((data: User[]) => [
     // dispatch to add data to the store
-    new SetData<User>({ data, schema }),
+    new AddData<User>({ data, schema }),
     // dispatch to inform feature reducer
     new LoadSuccess(data)
   ])
   .catch(err => Observable.of(new LoadFail(err)));
 ```
+
+### Setting data
+The `SetData` action will overwrite all entities for a given schema with the normalized entities of the `data` property of the action payload.
 
 ### Removing data
 To remove data, *ngrx-normalizr* provides a `RemoveData` action.
@@ -117,6 +119,7 @@ removeEffect$ = this.actions$
 ### Action creators
 For convenience, *ngrx-normalizr* provides an `actionCreators` function which will return an object with following schema bound action creators:
 * `setData` - `(data: T[]) => SetData<T>`
+* `addData` - `(data: T[]) => AddData<T>`
 * `removeData` - `(id: string, removeChildren?: SchemaMap) => RemoveData`
 
 Action creators could be exported along whith other feature actions:
@@ -124,6 +127,7 @@ Action creators could be exported along whith other feature actions:
 import { actionCreators } from 'ngrx-normalizr';
 
 const creators = actionCreators<User>(userSchema);
+export const setUserData = creators.setData;
 export const addUserData = creators.addData;
 export const removeUserData = creators.removeData;
 ```
