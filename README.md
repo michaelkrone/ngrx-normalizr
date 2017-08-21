@@ -1,6 +1,6 @@
 # ngrx-normalizr
 
-[![Build Status](https://travis-ci.org/gastro-instruments/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/gastro-instruments/ngrx-normalizr)
+[![Build Status](https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/michaelkrone/ngrx-normalizr)
 
 > Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
@@ -27,7 +27,7 @@ npm i @ngrx/store normalizr
 ```
 
 ## Usage
-Also refer to the [Typedoc documentation](https://gastro-instruments.github.io/ngrx-normalizr/).
+Also refer to the [Typedoc documentation](https://michaelkrone.github.io/ngrx-normalizr/).
 To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the `NormalizedState` interface. This will force the `ActionReducerMap` to implement a reducer which reduces the state to a `NormalizedState`.
 
 ```javascript
