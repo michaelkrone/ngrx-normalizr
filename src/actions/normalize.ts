@@ -135,22 +135,22 @@ export class RemoveData implements Action {
 export function actionCreators<T>(schema: schema.Entity) {
 	return {
 		/**
-     * Action creator for the `AddData` action.
-     * @returns A new instance of the `AddData` action with the given schema add.
+     * Action creator for the `SetData` action.
+     * @returns A new instance of the `SetData` action with the given schema.
      */
 		setData: (data: NormalizeDataPayload<T>['data']) =>
 			new SetData<T>({ data, schema }),
 
 		/**
      * Action creator for the `AddData` action.
-     * @returns A new instance of the `AddData` action with the given schema add.
+     * @returns A new instance of the `AddData` action with the given schema.
      */
 		addData: (data: NormalizeDataPayload<T>['data']) =>
 			new AddData<T>({ data, schema }),
 
 		/**
      * Action creator for the `RemoveData` action.
-     * @returns A new instance of the `RemoveData` action with the given schema add.
+     * @returns A new instance of the `RemoveData` action with the given schema.
      */
 		removeData: (
 			id: NormalizeRemovePayload['id'],

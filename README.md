@@ -75,7 +75,7 @@ export const petSchema = new schema.Entity('pets');
 export const userSchema = new schema.Entity('users', { pets: [petSchema] });
 ```
 
-## Set and remove data
+## Add, set and remove data
 Actions are used to set data in - and remove data from - the normalized store.
 
 ### Adding data
@@ -228,14 +228,14 @@ const getSelectedUserWithPetsOnly = createSelector(
 
 Michael Krone – [@DevDig](https://twitter.com/DevDig) – michael.krone@outlook.com
 
-Distributed under the MIT license. See [``LICENSE``](https://github.com/michaelkrone/ngrx-normalizr/blob/master/LICENSE) for more information.
+Distributed under the MIT license. See [``LICENSE``](https://github.com/gastro-instruments/ngrx-normalizr/blob/master/LICENSE) for more information.
 
-[https://github.com/michaelkrone/ngrx-normalizr](https://github.com/michaelkrone/ngrx-normalizr)
+[https://github.com/gastro-instruments/ngrx-normalizr](https://github.com/gastro-instruments/ngrx-normalizr)
 
 ## Contributing
 
-1. Fork it (<https://github.com/michaelkrone/ngrx-normalizr>)
+1. Fork it (<https://github.com/gastro-instruments/ngrx-normalizr>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new [Pull Request](https://github.com/michaelkrone/ngrx-normalizr/compare?expand=1)
+5. Create a new [Pull Request](https://github.com/gastro-instruments/ngrx-normalizr/compare?expand=1)

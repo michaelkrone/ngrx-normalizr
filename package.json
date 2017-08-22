@@ -1,22 +1,24 @@
 {
 	"name": "ngrx-normalizr",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Normalizing state reducer for ngrx applications",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"test": "./node_modules/.bin/karma start",
-		"prepublishOnly": "yarn tsc && yarn docs && yarn docs-github",
+		"watch": "./node_modules/.bin/karma start",
+		"prepublishOnly": "yarn compile",
 		"tsc": "rm -rf ./dist && tsc",
-		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default",
+		"aot": "./node_modules/.bin/ngc tsconfig-aot.json",
+		"compile": "yarn tsc && yarn aot",
+		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
 		"docs-github": "touch ./docs/.nojekyll",
-		"ci": "yarn tsc && ./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+		"test": "./node_modules/.bin/karma start karma-ci.conf.js && yarn aot"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/michaelkrone/ngrx-normalizr"
+		"url": "https://github.com/gastro-instruments/ngrx-normalizr"
 	},
 	"license": "MIT",
 	"peerDependencies": {
@@ -26,6 +28,9 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@angular/core": "^4.3.5",
+		"@angular/compiler": "^4.3.5",
+		"@angular/compiler-cli": "^4.3.5",
+		"@angular/platform-server": "^4.3.5",
 		"@ngrx/store": "^4.0.3",
 		"@types/jasmine": "^2.5.53",
 		"@types/jasminewd2": "^2.0.2",
@@ -40,7 +45,6 @@
 		"karma-firefox-launcher": "^1.0.1",
 		"karma-jasmine": "^1.1.0",
 		"karma-jasmine-html-reporter": "^0.2.2",
-		"karma-phantomjs-launcher": "^1.0.4",
 		"karma-typescript": "^3.0.5",
 		"normalizr": "^3.2.3",
 		"rxjs": "^5.4.3",
