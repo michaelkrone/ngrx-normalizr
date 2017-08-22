@@ -4,11 +4,11 @@ import * as should from 'should';
 import * as actions from '../actions/normalize';
 import * as reducer from './normalize';
 
-const myChildSchema = new schema.Entity('child');
-const mySchema = new schema.Entity('parent', { childs: [myChildSchema] });
+const childSchema = new schema.Entity('child');
+const mySchema = new schema.Entity('parent', { childs: [childSchema] });
 
 describe('reducers', () => {
-	let data, addAction1, addAction2, setAction1;
+	let data;
 
 	beforeEach(() => {
 		data = [
@@ -29,9 +29,6 @@ describe('reducers', () => {
 				]
 			}
 		];
-		addAction1 = new actions.AddData({ data: [data[0]], schema: mySchema });
-		addAction2 = new actions.AddData({ data: [data[1]], schema: mySchema });
-		setAction1 = new actions.SetData({ data: [data[1]], schema: mySchema });
 	});
 
 	describe('reducer function', () => {
@@ -47,135 +44,244 @@ describe('reducers', () => {
 			state.entities.should.eql({});
 			state.result.should.eql([]);
 		});
+
+		describe('handling actions', () => {
+			let addAction1, addAction2, setAction1;
+
+			beforeEach(() => {
+				addAction1 = new actions.AddData({ data: [data[0]], schema: mySchema });
+				addAction2 = new actions.AddData({ data: [data[1]], schema: mySchema });
+				setAction1 = new actions.SetData({ data: [data[1]], schema: mySchema });
+			});
+
+			describe('SetData action', () => {
+				it('should set data in the store', () => {
+					const state = reducer.normalized(undefined, setAction1);
+					state.entities.should.have.properties('parent', 'child');
+					Object.keys(state.entities.parent).should.eql([data[1].id]);
+					Object.keys(state.entities.child).should.eql(
+						data[1].childs.map(c => c.id)
+					);
+					state.result.should.eql([data[1].id]);
+				});
+
+				it('should overwrite data in the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, setAction1);
+					state.entities.should.have.properties('parent', 'child');
+					Object.keys(state.entities.parent).should.eql([data[1].id]);
+					Object.keys(state.entities.child).should.eql(
+						data[1].childs.map(c => c.id)
+					);
+					state.result.should.eql([data[1].id]);
+				});
+			});
+
+			describe('AddData action', () => {
+				it('should add data to the store', () => {
+					const state = reducer.normalized(undefined, addAction1);
+					state.entities.should.have.properties('parent', 'child');
+					Object.keys(state.entities.parent).should.eql([data[0].id]);
+					Object.keys(state.entities.child).should.eql(
+						data[0].childs.map(c => c.id)
+					);
+					state.result.should.eql([data[0].id]);
+				});
+
+				it('should update data in the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, addAction2);
+					state.entities.should.have.properties('parent', 'child');
+					state.entities.parent.should.have.properties(data.map(d => d.id));
+					state.result.should.eql([data[1].id]);
+				});
+			});
+
+			describe('RemoveData action', () => {
+				it('should remove data from the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(
+						state,
+						new actions.RemoveData({ id: data[0].id, schema: mySchema })
+					);
+					should(state.entities.parent[data[0].id]).be.undefined();
+					data[0].childs
+						.map(c => c.id)
+						.forEach(id => should.exist(state.entities.child[id]));
+				});
+
+				it('should not remove any data if an invalid id is passed', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(
+						state,
+						new actions.RemoveData({ id: 'ZOMG', schema: mySchema })
+					);
+					state.entities.parent.should.have.properties(data[0].id);
+				});
+
+				it('should remove data and its childs', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(
+						state,
+						new actions.RemoveData({
+							id: data[0].id,
+							schema: mySchema,
+							removeChildren: { child: 'childs' }
+						})
+					);
+					should(state.entities.parent[data[0].id]).be.undefined();
+					data[0].childs
+						.map(c => c.id)
+						.forEach(id => should.not.exist(state.entities.child[id]));
+				});
+
+				it('should remove child data if its not an array', () => {
+					const childSchema2 = new schema.Entity('child');
+					const mySchema2 = new schema.Entity('parent', {
+						child: childSchema
+					});
+					const denormalizedData = [
+						{
+							id: '1',
+							child: { id: '2' }
+						}
+					];
+					const action = new actions.SetData({
+						data: denormalizedData,
+						schema: mySchema2
+					});
+					let state = reducer.normalized(undefined, action);
+					state = reducer.normalized(
+						state,
+						new actions.RemoveData({
+							id: denormalizedData[0].id,
+							schema: mySchema2,
+							removeChildren: { child: 'child' }
+						})
+					);
+					should(state.entities.parent[denormalizedData[0].id]).be.undefined();
+					should(
+						state.entities.child[denormalizedData[0].child.id]
+					).be.undefined();
+				});
+			});
+		});
 	});
 
-	describe('SetData action', () => {
-		it('should set data in the store', () => {
-			const state = reducer.normalized(undefined, setAction1);
-			state.entities.should.have.properties('parent', 'child');
-			state.entities.parent.should.have.properties(data[1].id);
-			state.result.should.eql([data[1].id]);
+	describe('exported selectors', () => {
+		let add;
+
+		beforeEach(() => {
+			add = new actions.AddData({ data: [data[0]], schema: mySchema });
 		});
 
-		it('should overwrite data in the store', () => {
-			let state = reducer.normalized(undefined, addAction1);
-			state = reducer.normalized(state, setAction1);
-			state.entities.should.have.properties('parent', 'child');
-			Object.keys(state.entities.parent).should.eql([data[1].id]);
-			state.result.should.eql([data[1].id]);
-		});
-	});
+		describe('getResult', () => {
+			it('should be exported', () => {
+				should(reducer.getResult).not.be.undefined();
+				reducer.getResult.should.be.a.Function();
+			});
 
-	describe('AddData action', () => {
-		it('should add data to the store', () => {
-			const state = reducer.normalized(undefined, addAction1);
-			state.entities.should.have.properties('parent', 'child');
-			state.entities.parent.should.have.properties(data[0].id);
-			state.result.should.eql([data[0].id]);
+			it('should return the result', () => {
+				const add = new actions.AddData({ data: [data[0]], schema: mySchema });
+				const state = reducer.normalized(undefined, add);
+				const result = reducer.getResult({ normalized: state });
+				result.should.eql(state.result);
+			});
 		});
 
-		it('should update data in the store', () => {
-			let state = reducer.normalized(undefined, addAction1);
-			state = reducer.normalized(state, addAction2);
-			state.entities.should.have.properties('parent', 'child');
-			state.entities.parent.should.have.properties(data.map(d => d.id));
-			state.result.should.eql([data[1].id]);
-		});
-	});
+		describe('getNormalizedEntities', () => {
+			it('should be exported', () => {
+				should(reducer.getNormalizedEntities).not.be.undefined();
+				reducer.getNormalizedEntities.should.be.a.Function();
+			});
 
-	describe('RemoveData action', () => {
-		it('should remove data from the store', () => {
-			let state = reducer.normalized(undefined, addAction1);
-			state = reducer.normalized(
-				state,
-				new actions.RemoveData({ id: data[0].id, schema: mySchema })
-			);
-			should(state.entities.parent[data[0].id]).be.undefined();
-			data[0].childs
-				.map(c => c.id)
-				.forEach(id => should.exist(state.entities.child[id]));
-		});
-
-		it('should not remove any data if an invalid id is passed', () => {
-			let state = reducer.normalized(undefined, addAction1);
-			state = reducer.normalized(
-				state,
-				new actions.RemoveData({ id: 'ZOMG', schema: mySchema })
-			);
-			state.entities.parent.should.have.properties(data[0].id);
-		});
-
-		it('should remove data and its childs', () => {
-			let state = reducer.normalized(undefined, addAction1);
-			state = reducer.normalized(
-				state,
-				new actions.RemoveData({
-					id: data[0].id,
-					schema: mySchema,
-					removeChildren: { child: 'childs' }
-				})
-			);
-			should(state.entities.parent[data[0].id]).be.undefined();
-			data[0].childs
-				.map(c => c.id)
-				.forEach(id => should.not.exist(state.entities.child[id]));
-		});
-	});
-
-	describe('getResult', () => {
-		it('should return the result', () => {
-			const state = reducer.normalized(undefined, addAction1);
-			const result = reducer.getResult({ normalized: state });
-			result.should.eql(state.result);
+			it('should return the normalized entity state', () => {
+				const normalized = reducer.normalized(undefined, add);
+				const denormalized = reducer.getNormalizedEntities({ normalized });
+				denormalized.should.be.an.Object();
+				denormalized.should.have.properties('parent', 'child');
+			});
 		});
 	});
 
 	describe('create schema selectors', () => {
+		let add, addAll, selectors;
+
+		beforeEach(() => {
+			selectors = reducer.createSchemaSelectors(mySchema);
+			add = new actions.AddData({ data: [data[0]], schema: mySchema });
+			addAll = new actions.AddData({ data, schema: mySchema });
+		});
+
 		it('should exist as a function', () => {
 			reducer.createSchemaSelectors.should.be.a.Function();
 			reducer.createSchemaSelectors.should.have.lengthOf(1);
 		});
 
-		it('should return schema selectors', () => {
-			const selectrs = reducer.createSchemaSelectors(mySchema);
-			selectrs.should.have.properties('getNormalizedEntities', 'getEntities');
-			selectrs.getNormalizedEntities.should.be.a.Function();
-			selectrs.getEntities.should.be.a.Function();
-		});
+		describe('schema selectors', () => {
+			it('should return schema selectors', () => {
+				selectors.should.have.properties(
+					'getNormalizedEntities',
+					'getEntities'
+				);
+				selectors.getNormalizedEntities.should.be.a.Function();
+				selectors.getEntities.should.be.a.Function();
+			});
 
-		describe('getNormalizedEntitities', () => {
-			it('should return the entities state', () => {
-				let state = reducer.normalized(undefined, addAction1);
-				const selectrs = reducer.createSchemaSelectors(mySchema);
-				const denormalized = selectrs.getNormalizedEntities({
-					normalized: state
+			describe('getEntities', () => {
+				it('should return the denormalized entities', () => {
+					const normalized = reducer.normalized(undefined, add);
+					const denormalized = selectors.getEntities({ normalized });
+					denormalized.should.be.an.Array();
+					denormalized[0].should.eql(data[0]);
 				});
-				denormalized.should.be.an.Object();
-				denormalized.should.have.properties('parent', 'child');
 			});
 		});
 
-		describe('getEntities', () => {
-			it('should return the denormalized entities', () => {
-				let state = reducer.normalized(undefined, addAction1);
-				const selectrs = reducer.createSchemaSelectors(mySchema);
-				const denormalized = selectrs.getEntities({
-					normalized: state
+		describe('projector functions', () => {
+			let projectors;
+
+			beforeEach(() => {
+				projectors = reducer.createSchemaSelectors(mySchema);
+			});
+
+			it('should return schema projectors', () => {
+				projectors.should.have.properties(
+					'entityProjector',
+					'entitiesProjector'
+				);
+				projectors.entityProjector.should.be.a.Function();
+				projectors.entitiesProjector.should.be.a.Function();
+			});
+
+			describe('entitiesProjector', () => {
+				it('should take entities as an argument', () => {
+					projectors.entitiesProjector.should.have.lengthOf(1);
 				});
-				denormalized.should.be.an.Array();
-				denormalized[0].should.eql(data[0]);
+
+				it('should project the given schema to denormalized entities', () => {
+					const normalized = reducer.normalized(undefined, addAll);
+					const denormalized = projectors.entitiesProjector(
+						normalized.entities
+					);
+					denormalized.should.eql(data);
+				});
+			});
+
+			describe('entityProjector', () => {
+				it('should take entities and an id as an argument', () => {
+					projectors.entityProjector.should.have.lengthOf(2);
+				});
+
+				it('should project the given schema to one denormalized entitiy', () => {
+					const normalized = reducer.normalized(undefined, addAll);
+					const denormalized = projectors.entityProjector(
+						normalized.entities,
+						data[1].id
+					);
+					denormalized.should.eql(data[1]);
+				});
 			});
 		});
-	});
-
-	describe('projector functions', () => {
-		it('should return schema projectors', () => {
-			const prjktrs = reducer.createSchemaSelectors(mySchema);
-			prjktrs.should.have.properties('entityProjector', 'entitiesProjector');
-			prjktrs.entityProjector.should.be.a.Function();
-			prjktrs.entitiesProjector.should.be.a.Function();
-		});
-
-		xit('should project the given schema to a denormalized entity', () => {});
 	});
 });

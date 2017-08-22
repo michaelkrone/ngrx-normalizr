@@ -4,7 +4,7 @@ import * as actions from './normalize';
 
 const mySchema = new schema.Entity('name');
 
-describe('Normalize action', () => {
+describe('Normalize actions', () => {
 	describe('SetData', () => {
 		it('should be exported', () => {
 			actions.SetData.should.be.a.Function();
