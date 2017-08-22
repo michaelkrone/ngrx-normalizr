@@ -15,7 +15,7 @@ const STATE_KEY = 'normalized';
 /**
  * Interface describing the entities propery of a normalized state.
  * A map of schema keys wich map to a map of entity id's to entity data.
- * This corresponds to the `entities` property of a `normalizr.normalize` result. *
+ * This corresponds to the `entities` property of a `normalizr.normalize` result.
  */
 export interface EntityMap {
 	[key: string]: { [id: string]: any };

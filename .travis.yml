@@ -1,4 +1,6 @@
 cache: yarn
+addons:
+  chrome: stable
 language: node_js
 node_js:
   - "8"
