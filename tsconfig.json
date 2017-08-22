@@ -18,6 +18,6 @@
 		"lib": ["es2016", "dom", "es2017.object"]
 	},
 	"angularCompilerOptions": {
-		"genDir": "compiled"
+		"genDir": "dist"
 	}
 }
