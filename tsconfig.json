@@ -16,5 +16,8 @@
 		"target": "es5",
 		"typeRoots": ["node_modules/@types"],
 		"lib": ["es2016", "dom", "es2017.object"]
+	},
+	"angularCompilerOptions": {
+		"genDir": "compiled"
 	}
 }
