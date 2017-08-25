@@ -1,6 +1,6 @@
 # ngrx-normalizr
 
-[![Build Status](https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/michaelkrone/ngrx-normalizr)
+[![Build Status](https://travis-ci.org/gastro-instruments/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/gastro-instruments/ngrx-normalizr)
 
 > Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
@@ -27,7 +27,7 @@ npm i @ngrx/store normalizr
 ```
 
 ## Usage
-Also refer to the [Typedoc documentation](https://michaelkrone.github.io/ngrx-normalizr/).
+Also refer to the [Typedoc documentation](https://gastro-instruments.github.io/ngrx-normalizr/).
 To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the `NormalizedState` interface. This will force the `ActionReducerMap` to implement a reducer which reduces the state to a `NormalizedState`.
 
 ```javascript
@@ -228,14 +228,14 @@ const getSelectedUserWithPetsOnly = createSelector(
 
 Michael Krone – [@DevDig](https://twitter.com/DevDig) – michael.krone@outlook.com
 
-Distributed under the MIT license. See [``LICENSE``](https://github.com/michaelkrone/ngrx-normalizr/blob/master/LICENSE) for more information.
+Distributed under the MIT license. See [``LICENSE``](https://github.com/gastro-instruments/ngrx-normalizr/blob/master/LICENSE) for more information.
 
-[https://github.com/michaelkrone/ngrx-normalizr](https://github.com/michaelkrone/ngrx-normalizr)
+[https://github.com/gastro-instruments/ngrx-normalizr](https://github.com/gastro-instruments/ngrx-normalizr)
 
 ## Contributing
 
-1. Fork it (<https://github.com/michaelkrone/ngrx-normalizr>)
+1. Fork it (<https://github.com/gastro-instruments/ngrx-normalizr>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new [Pull Request](https://github.com/michaelkrone/ngrx-normalizr/compare?expand=1)
+5. Create a new [Pull Request](https://github.com/gastro-instruments/ngrx-normalizr/compare?expand=1)
