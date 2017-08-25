@@ -17,7 +17,7 @@
 	"author": "Michael Krone <michael.krone@outlook.com>",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/gastro-instruments/ngrx-normalizr"
+		"url": "https://github.com/michaelkrone/ngrx-normalizr"
 	},
 	"license": "MIT",
 	"peerDependencies": {
