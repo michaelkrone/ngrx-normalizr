@@ -243,6 +243,7 @@ function createDenormalizer(schema: schema.Entity) {
 	const key = schema.key;
 	return (entities: { [key: string]: {} }, id?: string) => {
 		if (!entities || !entities[key]) {
+			/* istanbul ignore next */
 			return;
 		}
 		const data = id ? { [key]: [id] } : { [key]: Object.keys(entities[key]) };

@@ -6,11 +6,12 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"watch": "./node_modules/.bin/karma start",
-		"prepublishOnly": "yarn tsc",
+		"prepublishOnly": "yarn aot",
 		"tsc": "rm -rf ./dist && tsc",
+		"aot": "rm -rf ./dist && ./node_modules/.bin/ngc",
 		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
 		"docs-github": "touch ./docs/.nojekyll",
-		"test": "yarn tsc && ./node_modules/.bin/karma start karma-ci.conf.js"
+		"test": "./node_modules/.bin/karma start karma-ci.conf.js"
 	},
 	"readme": "README.md",
 	"author": "Michael Krone <michael.krone@outlook.com>",
@@ -26,6 +27,9 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@angular/core": "^4.3.5",
+		"@angular/compiler": "^4.3.5",
+		"@angular/compiler-cli": "^4.3.5",
+		"@angular/platform-server": "^4.3.5",
 		"@ngrx/store": "^4.0.3",
 		"@types/jasmine": "^2.5.53",
 		"@types/jasminewd2": "^2.0.2",
