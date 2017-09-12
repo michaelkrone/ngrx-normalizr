@@ -8,7 +8,7 @@ import { schema } from 'normalizr';
 /**
  * Internal action namespace
  */
-const ACION_NAMESPACE = '[@@Normalize]';
+const ACTION_NAMESPACE = '[@@Normalize]';
 
 /**
  * A map of schema names to object property names.
@@ -63,17 +63,17 @@ export class NormalizeActionTypes {
 	/**
    * Action type of the `SetData` action.
    */
-	static readonly SET_DATA = `${ACION_NAMESPACE} Set Data`;
+	static readonly SET_DATA = `${ACTION_NAMESPACE} Set Data`;
 
 	/**
    * Action type of the `AddData` action.
    */
-	static readonly ADD_DATA = `${ACION_NAMESPACE} Add Data`;
+	static readonly ADD_DATA = `${ACTION_NAMESPACE} Add Data`;
 
 	/**
    * Action type of the `RemoveData` action.
    */
-	static readonly REMOVE_DATA = `${ACION_NAMESPACE} Remove Data`;
+	static readonly REMOVE_DATA = `${ACTION_NAMESPACE} Remove Data`;
 }
 
 /**
