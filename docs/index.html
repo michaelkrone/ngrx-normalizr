@@ -206,7 +206,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 				<p><code>createSchemaSelectors</code> will return schema bound selectors:</p>
 				<ul>
 					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities for the schema</li>
-					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns all normalized (raw) state enities of every schema (the whole entities state)</li>
+					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns all normalized (raw) state entities of every schema (the whole entities state)</li>
 					<li><code>entitiesProjector</code> - <code>(entities: {}) =&gt; T[]</code> Projector function for denormalizing a the set of normalized entities to an denormalized entity array</li>
 					<li><code>entityProjector</code> - <code>(entities: {}, id: string) =&gt; T</code> Projector function for denormalizing a single normalized entity with the given id</li>
 				</ul>
