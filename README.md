@@ -170,7 +170,7 @@ const schemaSelectors = createSchemaSelectors<User>(userSchema);
 
 `createSchemaSelectors` will return schema bound selectors:
 * `getEntities` - ` MemoizedSelector<{}, T[]>` Returns all denormalized entities for the schema
-* `getNormalizedEntities` - `MemoizedSelector<any, EntityMap>` Returns all normalized (raw) state enities of every schema (the whole entities state)
+* `getNormalizedEntities` - `MemoizedSelector<any, EntityMap>` Returns all normalized (raw) state entities of every schema (the whole entities state)
 * `entitiesProjector` - `(entities: {}) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array
 * `entityProjector` - `(entities: {}, id: string) => T` Projector function for denormalizing a single normalized entity with the given id
 
