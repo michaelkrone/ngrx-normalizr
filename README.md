@@ -1,6 +1,7 @@
 # ngrx-normalizr
 
 [![Build Status](https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/michaelkrone/ngrx-normalizr)
+![AOT compatible](https://img.shields.io/badge/aot-compatible-blue.svg)
 
 > Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
