@@ -1,6 +1,7 @@
 # ngrx-normalizr
 
 [![Build Status](https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/michaelkrone/ngrx-normalizr)
+![AOT compatible](https://img.shields.io/badge/aot-compatible-blue.svg)
 
 > Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
@@ -28,7 +29,7 @@ npm i @ngrx/store normalizr
 
 ## Usage
 Also refer to the [Typedoc documentation](https://michaelkrone.github.io/ngrx-normalizr/).
-To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the `NormalizedState` interface. This will force the `ActionReducerMap` to implement a reducer which reduces the state to a `NormalizedState`.
+To enable the normalizing reducer to store normalized data, you have to add it to your state. The best place for this might be the root state of your application, but feature states may use their own normalized state as well. Extend your state interface with the `NormalizedState` interface. The`ActionReducerMap` has to implement a reducer which reduces the state to a `NormalizedState`.
 
 ```javascript
 import { ActionReducerMap } from '@ngrx/store';
@@ -44,12 +45,12 @@ export const reducers: ActionReducerMap<State> = {
 };
 ```
 
-If there are no other state properties, it is sufficient to add the *ngrx-normalizr* reducer to your state reducers:
+If there are no other state properties, it is sufficient to add the *ngrx-normalizr* reducer to your state reducers or simply pass it to `StoreModule.forRoot`.
 ```javascript
 export const reducers: ActionReducerMap<NormalizedState> = { normalized };
 ```
 
-Now you have a `normalized` state property which can will the normalized data. Do not worry about the weird name,
+Now you have a `normalized` state property which will hold the normalized data. Do not worry about the weird name,
 you will not have to deal with it.
 
 ### Schemas
@@ -98,7 +99,8 @@ loadEffect$ = this.actions$
 ```
 
 ### Setting data
-The `SetData` action will overwrite all entities for a given schema with the normalized entities of the `data` property of the action payload.
+The `SetData` action will overwrite all entities for a given schema with the normalized entities of the `data` property of the action payload. This action can
+be used for resetting entity state data instead of adding and updating existing entities.
 
 ### Removing data
 To remove data, *ngrx-normalizr* provides a `RemoveData` action.
