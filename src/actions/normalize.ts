@@ -57,6 +57,26 @@ export interface NormalizeRemovePayload extends SchemaPayload {
 }
 
 /**
+ * Interface for result for the `actionCreators` function
+ */
+export interface NormalizeActionCreators<T> {
+	/**
+   * Action creator for the `SetData` action
+   */
+	setData: (data: T[]) => SetData<T>;
+
+	/**
+   * Action creator for the `AddData` action
+   */
+	addData: (data: T[]) => AddData<T>;
+
+	/**
+   * Action creator for the `removeData` action
+   */
+	removeData: (id: string, removeChildren?: SchemaMap) => RemoveData;
+}
+
+/**
  * All types of the provided actions.
  */
 export class NormalizeActionTypes {
@@ -132,7 +152,9 @@ export class RemoveData implements Action {
  * This is provided for convenience.
  * @param schema The schema the action creators should be bound to
  */
-export function actionCreators<T>(schema: schema.Entity) {
+export function actionCreators<T>(
+	schema: schema.Entity
+): NormalizeActionCreators<T> {
 	return {
 		/**
      * Action creator for the `SetData` action.
