@@ -170,7 +170,7 @@ import { User } from '../classes/user';
 const schemaSelectors = createSchemaSelectors<User>(userSchema);
 ```
 
-`createSchemaSelectors` will return schema bound selectors:
+`createSchemaSelectors` will return schema bound selectors (instance of `SchemaSelectors`):
 * `getEntities` - ` MemoizedSelector<{}, T[]>` Returns all denormalized entities for the schema
 * `getNormalizedEntities` - `MemoizedSelector<any, EntityMap>` Returns all normalized (raw) state entities of every schema (the whole entities state)
 * `entitiesProjector` - `(entities: {}) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array
@@ -228,7 +228,7 @@ const getSelectedUserWithPetsOnly = createSelector(
 
 ## Meta
 
-Michael Krone – [@DevDig](https://twitter.com/DevDig) – michael.krone@outlook.com
+Michael Krone – [@DevDig](https://twitter.com/DevDig) – michael.krone@outlook.com and all [CONTRIBUTORS](https://github.com/michaelkrone/ngrx-normalizr/graphs/contributors)
 
 Distributed under the MIT license. See [``LICENSE``](https://github.com/michaelkrone/ngrx-normalizr/blob/master/LICENSE) for more information.
 

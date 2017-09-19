@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NormalizedEntityState | ngrx-normalizr</title>
+	<title>SchemaSelectors | ngrx-normalizr</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_reducers_normalize_.html">&quot;reducers/normalize&quot;</a>
 				</li>
 				<li>
-					<a href="_reducers_normalize_.normalizedentitystate.html">NormalizedEntityState</a>
+					<a href="_reducers_normalize_.schemaselectors.html">SchemaSelectors</a>
 				</li>
 			</ul>
-			<h1>Interface NormalizedEntityState</h1>
+			<h1>Interface SchemaSelectors&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,17 +72,23 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The normalized state, representing a <code>normalizr.normalize</code> result.
-							Can be selected by the provided <code>getNormalizedEntities</code> and <code>getResult</code>
-						selectors.</p>
+						<p>Generic interface for <code>createSchemaSelectors</code> return type.</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">NormalizedEntityState</span>
+						<span class="target">SchemaSelectors</span>
 					</li>
 				</ul>
 			</section>
@@ -93,8 +99,10 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.normalizedentitystate.html#entities" class="tsd-kind-icon">entities</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.normalizedentitystate.html#result" class="tsd-kind-icon">result</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.schemaselectors.html#entitiesprojector" class="tsd-kind-icon">entities<wbr>Projector</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.schemaselectors.html#entityprojector" class="tsd-kind-icon">entity<wbr>Projector</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.schemaselectors.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_reducers_normalize_.schemaselectors.html#getnormalizedentities" class="tsd-kind-icon">get<wbr>Normalized<wbr>Entities</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,37 +111,89 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="entities" class="tsd-anchor"></a>
-					<h3>entities</h3>
-					<div class="tsd-signature tsd-kind-icon">entities<span class="tsd-signature-symbol">:</span> <a href="_reducers_normalize_.entitymap.html" class="tsd-signature-type">EntityMap</a></div>
+					<a name="entitiesprojector" class="tsd-anchor"></a>
+					<h3>entities<wbr>Projector</h3>
+					<div class="tsd-signature tsd-kind-icon">entities<wbr>Projector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L50">reducers/normalize.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L187">reducers/normalize.ts:187</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The normalized entities. Should be passed to all projector functions
-							to enable access to all entities needed.</p>
-						</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>entities<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__type</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>entities: <span class="tsd-signature-type">__type</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="result" class="tsd-anchor"></a>
-					<h3>result</h3>
-					<div class="tsd-signature tsd-kind-icon">result<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="entityprojector" class="tsd-anchor"></a>
+					<h3>entity<wbr>Projector</h3>
+					<div class="tsd-signature tsd-kind-icon">entity<wbr>Projector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L44">reducers/normalize.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L186">reducers/normalize.ts:186</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The original sorting of the unnormalized data.
-								Holds all id&#39;s of the last set operation in original order.
-							Can be used to restore the original sorting of entities</p>
-						</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>entities<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__type</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>entities: <span class="tsd-signature-type">__type</span></h5>
+											</li>
+											<li>
+												<h5>id: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="getentities" class="tsd-anchor"></a>
+					<h3>get<wbr>Entities</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Entities<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MemoizedSelector</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">__type</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L185">reducers/normalize.ts:185</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="getnormalizedentities" class="tsd-anchor"></a>
+					<h3>get<wbr>Normalized<wbr>Entities</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Normalized<wbr>Entities<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MemoizedSelector</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><a href="_reducers_normalize_.entitymap.html" class="tsd-signature-type">EntityMap</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/1c77013/src/reducers/normalize.ts#L184">reducers/normalize.ts:184</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -165,27 +225,33 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
 						<a href="_reducers_normalize_.entitymap.html" class="tsd-kind-icon">Entity<wbr>Map</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
+						<a href="_reducers_normalize_.normalizedentitystate.html" class="tsd-kind-icon">Normalized<wbr>Entity<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
+						<a href="_reducers_normalize_.normalizedstate.html" class="tsd-kind-icon">Normalized<wbr>State</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
-						<a href="_reducers_normalize_.normalizedentitystate.html" class="tsd-kind-icon">Normalized<wbr>Entity<wbr>State</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
+						<a href="_reducers_normalize_.schemaselectors.html" class="tsd-kind-icon">Schema<wbr>Selectors</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_reducers_normalize_.normalizedentitystate.html#entities" class="tsd-kind-icon">entities</a>
+								<a href="_reducers_normalize_.schemaselectors.html#entitiesprojector" class="tsd-kind-icon">entities<wbr>Projector</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_reducers_normalize_.normalizedentitystate.html#result" class="tsd-kind-icon">result</a>
+								<a href="_reducers_normalize_.schemaselectors.html#entityprojector" class="tsd-kind-icon">entity<wbr>Projector</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_reducers_normalize_.schemaselectors.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_reducers_normalize_.schemaselectors.html#getnormalizedentities" class="tsd-kind-icon">get<wbr>Normalized<wbr>Entities</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
-						<a href="_reducers_normalize_.normalizedstate.html" class="tsd-kind-icon">Normalized<wbr>State</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
-						<a href="_reducers_normalize_.schemaselectors.html" class="tsd-kind-icon">Schema<wbr>Selectors</a>
-					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported">
 						<a href="../modules/_reducers_normalize_.html#state_key" class="tsd-kind-icon">STATE_<wbr>KEY</a>
 					</li>

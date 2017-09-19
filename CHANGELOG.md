@@ -1,5 +1,8 @@
+* _1.0.4_
+    * exporting `SchemaSelectors` interface ([@JSantha](https://github.com/JSantha))
+
 * _1.0.3_
-    * fixed typos (thanks to [@hoisel](https://github.com/hoisel))
+    * fixed typos ([@hoisel](https://github.com/hoisel))
     * exporting types for reuse in other libraries
 
 * _1.0.2_

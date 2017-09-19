@@ -205,7 +205,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 
 <span class="hljs-keyword">const</span> schemaSelectors = createSchemaSelectors&lt;User&gt;(userSchema);
 </code></pre>
-				<p><code>createSchemaSelectors</code> will return schema bound selectors:</p>
+				<p><code>createSchemaSelectors</code> will return schema bound selectors (instance of <code>SchemaSelectors</code>):</p>
 				<ul>
 					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities for the schema</li>
 					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns all normalized (raw) state entities of every schema (the whole entities state)</li>
@@ -253,7 +253,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 );
 </code></pre>
 				<h2 id="meta">Meta</h2>
-				<p>Michael Krone – <a href="https://twitter.com/DevDig">@DevDig</a> – michael.krone@outlook.com</p>
+				<p>Michael Krone – <a href="https://twitter.com/DevDig">@DevDig</a> – michael.krone@outlook.com and all <a href="https://github.com/michaelkrone/ngrx-normalizr/graphs/contributors">CONTRIBUTORS</a></p>
 				<p>Distributed under the MIT license. See <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/master/LICENSE"><code>LICENSE</code></a> for more information.</p>
 				<p><a href="https://github.com/michaelkrone/ngrx-normalizr">https://github.com/michaelkrone/ngrx-normalizr</a></p>
 				<h2 id="contributing">Contributing</h2>
