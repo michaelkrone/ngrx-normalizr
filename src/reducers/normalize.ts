@@ -178,10 +178,20 @@ export const getResult: MemoizedSelector<any, string[]> = createSelector(
 );
 
 /**
+ * Generic interface for `createSchemaSelectors` return type.
+ */
+export interface SchemaSelectors<T> {
+    getNormalizedEntities: MemoizedSelector<any, EntityMap>;
+    getEntities: MemoizedSelector<{}, T[]>;
+    entityProjector: (entities: {}, id: string) => T;
+    entitiesProjector: (entities: {}) => T[];
+}
+
+/**
  * Creates an object of selectors and projector functions bound to the given schema.
  * @param schema The schema to bind the selectors and projectors to
  */
-export function createSchemaSelectors<T>(schema: schema.Entity) {
+export function createSchemaSelectors<T>(schema: schema.Entity): SchemaSelectors<T> {
 	return {
 		/**
      * Select all entities, regardless of their schema, exported for convenience.
