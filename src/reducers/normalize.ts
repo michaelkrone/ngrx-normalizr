@@ -127,6 +127,7 @@ export function normalized(
 					removeChildren
 				).map(([key, entityProperty]: [string, string]) => {
 					const child = entity[entityProperty];
+					/* istanbul ignore else */
 					if (child && entities[key]) {
 						const ids = Array.isArray(child) ? child : [child];
 						ids.forEach((oldId: string) => delete entities[key][oldId]);
@@ -252,8 +253,8 @@ function createEntitiesProjector<T>(schema: schema.Entity) {
 function createDenormalizer(schema: schema.Entity) {
 	const key = schema.key;
 	return (entities: { [key: string]: {} }, id?: string) => {
+		/* istanbul ignore if */
 		if (!entities || !entities[key]) {
-			/* istanbul ignore next */
 			return;
 		}
 		const data = id ? { [key]: [id] } : { [key]: Object.keys(entities[key]) };
