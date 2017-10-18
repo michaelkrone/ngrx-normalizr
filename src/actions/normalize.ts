@@ -54,7 +54,7 @@ export interface NormalizeRemoveActionPayload {
      * If maps valid schema keys to propety names,
      * children referenced by the schema key will be removed by its id
      */
-	removeChildren?: SchemaMap;
+	removeChildren: SchemaMap | null;
 }
 
 /**
@@ -226,7 +226,8 @@ export class RemoveData implements Action {
 		this.payload = {
 			id,
 			key: schema.key,
-			removeChildren: removeMap
+			removeChildren:
+				removeMap && Object.keys(removeMap).length ? removeMap : null
 		};
 	}
 }

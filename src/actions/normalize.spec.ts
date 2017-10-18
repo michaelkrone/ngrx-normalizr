@@ -126,6 +126,15 @@ describe('Normalize actions', () => {
 				action.payload.id.should.eql(id);
 				action.payload.removeChildren.should.eql(removeChildren);
 			});
+
+			it('should not add invalid entity keys to the removeChildren payload', () => {
+				const action = result.removeData(id, { some: 'random' });
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties('id', 'removeChildren');
+				action.payload.id.should.eql(id);
+				(action.payload.removeChildren === null).should.be.true();
+			});
 		});
 	});
 });
