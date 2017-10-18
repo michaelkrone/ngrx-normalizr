@@ -3,7 +3,7 @@
  */
 
 import { createSelector, MemoizedSelector } from '@ngrx/store';
-import { normalize, denormalize, schema } from 'normalizr';
+import { denormalize, schema } from 'normalizr';
 
 import { NormalizeActionTypes } from '../actions/normalize';
 
@@ -87,8 +87,7 @@ export function normalized(
 ) {
 	switch (action.type) {
 		case NormalizeActionTypes.SET_DATA: {
-			const { data, schema } = action.payload;
-			const { result, entities } = normalize(data, [schema]);
+			const { result, entities } = action.payload;
 
 			return {
 				result,
@@ -100,8 +99,7 @@ export function normalized(
 		}
 
 		case NormalizeActionTypes.ADD_DATA: {
-			const { data, schema } = action.payload;
-			const { result, entities } = normalize(data, [schema]);
+			const { result, entities } = action.payload;
 
 			return {
 				result,
@@ -116,27 +114,27 @@ export function normalized(
 		}
 
 		case NormalizeActionTypes.REMOVE_DATA: {
-			const { id, schema, removeChildren } = action.payload;
+			const { id, key, removeChildren } = action.payload;
 			const entities = { ...state.entities };
-			const entity = entities[schema.key][id];
+			const entity = entities[key][id];
 
 			if (!entity) {
 				return state;
 			}
 
-			if (removeChildren && schema.schema) {
+			if (removeChildren) {
 				Object.entries(
 					removeChildren
 				).map(([key, entityProperty]: [string, string]) => {
 					const child = entity[entityProperty];
-					if (child && schema.schema[entityProperty] && entities[key]) {
+					if (child && entities[key]) {
 						const ids = Array.isArray(child) ? child : [child];
 						ids.forEach((oldId: string) => delete entities[key][oldId]);
 					}
 				});
 			}
 
-			delete entities[schema.key][id];
+			delete entities[key][id];
 
 			return {
 				result: state.result,
