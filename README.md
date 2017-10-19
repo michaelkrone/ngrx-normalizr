@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master)](https://travis-ci.org/michaelkrone/ngrx-normalizr)
 ![AOT compatible](https://img.shields.io/badge/aot-compatible-blue.svg)
 
-> Managing [normalized state](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
+> Managing [normalized state](https://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html) in [ngrx](https://github.com/ngrx/platform) applications, transparently.
 
 
 This package provides a set of actions, reducers and selectors for handling normalization and denormalization of state data **transparently**.
@@ -80,7 +80,7 @@ export const userSchema = new schema.Entity('users', { pets: [petSchema] });
 Actions are used to set data in - and remove data from - the normalized store.
 
 ### Adding data
-To add data and automatically normalize it, *ngrx-normalizr* provides a `AddData` action. This action takes an object with `data` and `schema` as a payload. Entities are identified by their id attribute set in the passed schema.
+To add data and automatically normalize it, *ngrx-normalizr* provides a `AddData` action. This action takes an object with `data` and `schema` as an argument. Entities are identified by their id attribute set in the passed schema.
 Existing entities will be overwritten by updated data, new entities will be added to the store.
 
 ###### Using `AddData` in an effect
@@ -99,19 +99,19 @@ loadEffect$ = this.actions$
 ```
 
 ### Setting data
-The `SetData` action will overwrite all entities for a given schema with the normalized entities of the `data` property of the action payload. This action can
+The `SetData` action will overwrite all entities for a given schema with the normalized entities of the `data` property of the action constructor argument. This action can
 be used for resetting entity state data instead of adding and updating existing entities.
 
 ### Removing data
 To remove data, *ngrx-normalizr* provides a `RemoveData` action.
-This action takes an object with `id`, `schema` and an optional `removeChildren` property as payload. The schema entity with the given id will be removed. If `removeChildren` is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.
+This action takes an object with `id`, `schema` and an optional `removeChildren` property as constructor argument. The schema entity with the given id will be removed. If `removeChildren` is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.
 
 ###### Using `RemoveData` in an effect
 ```javascript
 @Effect()
 removeEffect$ = this.actions$
   .ofType(REMOVE)
-  .switchMap((action: Remove) => this.http.delete(`http://example.com/api/user/${action.payload}`))
+  .switchMap((action: Remove) => this.http.delete(`https://example.com/api/user/${action.payload.id}`))
   .mergeMap(result => [
     // dispatch to remove data from the store
     new RemoveData({ id: result.id, schema, removeChildren: { pets: 'pets' } }),
@@ -146,7 +146,7 @@ import { removeUserData } from '../actions';
 @Effect()
 removeEffect$ = this.actions$
   .ofType(REMOVE)
-  .switchMap((action: Remove) => this.http.delete(`http://example.com/api/user/${action.payload}`))
+  .switchMap((action: Remove) => this.http.delete(`https://example.com/api/user/${action.payload.id}`))
   .mergeMap(result => [
     // dispatch to remove data from the store
     removeUserData(id: result.id, { pets: 'pets' }),
