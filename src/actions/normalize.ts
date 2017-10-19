@@ -87,13 +87,13 @@ export interface NormalizeRemoveActionConfig
 	/**
    * The id of the entity that should be removed
    */
-	id: string;
+	id: NormalizeRemoveActionPayload['id'];
 
 	/**
    * If maps valid schema keys to propety names,
    * children referenced by the schema key will be removed by its id
    */
-	removeChildren?: SchemaMap;
+	removeChildren?: NormalizeRemoveActionPayload['removeChildren'];
 }
 
 /**
