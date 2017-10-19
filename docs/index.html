@@ -68,7 +68,7 @@
 				<p><a href="https://travis-ci.org/michaelkrone/ngrx-normalizr"><img src="https://travis-ci.org/michaelkrone/ngrx-normalizr.svg?branch=master" alt="Build Status"></a>
 				<img src="https://img.shields.io/badge/aot-compatible-blue.svg" alt="AOT compatible"></p>
 				<blockquote>
-					<p>Managing <a href="http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html">normalized state</a> in <a href="https://github.com/ngrx/platform">ngrx</a> applications, transparently.</p>
+					<p>Managing <a href="https://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html">normalized state</a> in <a href="https://github.com/ngrx/platform">ngrx</a> applications, transparently.</p>
 				</blockquote>
 				<p>This package provides a set of actions, reducers and selectors for handling normalization and denormalization of state data <strong>transparently</strong>.
 					<em>ngrx-normalizr</em> uses <a href="https://github.com/paularmstrong/normalizr">normalizr</a> for <a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#normalizedata-schema">normalizing</a> and <a href="https://github.com/paularmstrong/normalizr/blob/master/docs/api.md#denormalizeinput-schema-entities">denormalizing</a> data. All normalization and denormalization
@@ -130,7 +130,7 @@ npm i @ngrx/store normalizr
 				<h2 id="add-set-and-remove-data">Add, set and remove data</h2>
 				<p>Actions are used to set data in - and remove data from - the normalized store.</p>
 				<h3 id="adding-data">Adding data</h3>
-				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>AddData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as a payload. Entities are identified by their id attribute set in the passed schema.
+				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>AddData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as an argument. Entities are identified by their id attribute set in the passed schema.
 				Existing entities will be overwritten by updated data, new entities will be added to the store.</p>
 				<h6 id="using-adddata-in-an-effect">Using <code>AddData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
@@ -146,16 +146,16 @@ loadEffect$ = <span class="hljs-keyword">this</span>.actions$
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
 </code></pre>
 				<h3 id="setting-data">Setting data</h3>
-				<p>The <code>SetData</code> action will overwrite all entities for a given schema with the normalized entities of the <code>data</code> property of the action payload. This action can
+				<p>The <code>SetData</code> action will overwrite all entities for a given schema with the normalized entities of the <code>data</code> property of the action constructor argument. This action can
 				be used for resetting entity state data instead of adding and updating existing entities.</p>
 				<h3 id="removing-data">Removing data</h3>
 				<p>To remove data, <em>ngrx-normalizr</em> provides a <code>RemoveData</code> action.
-				This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as payload. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.</p>
+				This action takes an object with <code>id</code>, <code>schema</code> and an optional <code>removeChildren</code> property as constructor argument. The schema entity with the given id will be removed. If <code>removeChildren</code> is a map of the schema key mapped to an object property, all referenced child entities will also be removed from the store. This is handy for 1:1 relations, since only removing the parent entity may leave unused child entities in the store.</p>
 				<h6 id="using-removedata-in-an-effect">Using <code>RemoveData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
 removeEffect$ = <span class="hljs-keyword">this</span>.actions$
   .ofType(REMOVE)
-  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`http://example.com/api/user/<span class="hljs-subst">${action.payload}</span>`</span>))
+  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`https://example.com/api/user/<span class="hljs-subst">${action.payload.id}</span>`</span>))
   .mergeMap(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> [
     <span class="hljs-comment">// dispatch to remove data from the store</span>
     <span class="hljs-keyword">new</span> RemoveData({ <span class="hljs-attr">id</span>: result.id, schema, <span class="hljs-attr">removeChildren</span>: { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> } }),
@@ -186,7 +186,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 @Effect()
 removeEffect$ = <span class="hljs-keyword">this</span>.actions$
   .ofType(REMOVE)
-  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`http://example.com/api/user/<span class="hljs-subst">${action.payload}</span>`</span>))
+  .switchMap(<span class="hljs-function">(<span class="hljs-params">action: Remove</span>) =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(<span class="hljs-string">`https://example.com/api/user/<span class="hljs-subst">${action.payload.id}</span>`</span>))
   .mergeMap(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> [
     <span class="hljs-comment">// dispatch to remove data from the store</span>
     removeUserData(id: result.id, { <span class="hljs-attr">pets</span>: <span class="hljs-string">'pets'</span> }),
