@@ -1,6 +1,6 @@
 {
 	"name": "ngrx-normalizr",
-	"version": "1.0.4",
+	"version": "2.0.0",
 	"description": "Normalizing state reducer for ngrx applications",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -27,9 +27,9 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"@angular/core": "^4.3.5",
 		"@angular/compiler": "^4.3.5",
 		"@angular/compiler-cli": "^4.3.5",
+		"@angular/core": "^4.3.5",
 		"@angular/platform-server": "^4.3.5",
 		"@ngrx/store": "^4.0.3",
 		"@types/jasmine": "^2.5.53",
@@ -46,7 +46,7 @@
 		"karma-jasmine": "^1.1.0",
 		"karma-jasmine-html-reporter": "^0.2.2",
 		"karma-typescript": "^3.0.5",
-		"normalizr": "^3.2.3",
+		"normalizr": "^3.2.4",
 		"rxjs": "^5.4.3",
 		"should": "^11.2.1",
 		"ts-node": "^3.3.0",

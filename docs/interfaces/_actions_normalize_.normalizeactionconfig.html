@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SchemaMap | ngrx-normalizr</title>
+	<title>NormalizeActionConfig | ngrx-normalizr</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_actions_normalize_.html">&quot;actions/normalize&quot;</a>
 				</li>
 				<li>
-					<a href="_actions_normalize_.schemamap.html">SchemaMap</a>
+					<a href="_actions_normalize_.normalizeactionconfig.html">NormalizeActionConfig</a>
 				</li>
 			</ul>
-			<h1>Interface SchemaMap</h1>
+			<h1>Interface NormalizeActionConfig&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,28 +72,79 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>A map of schema names to object property names.
-						Used for removing child properties of an entity.</p>
+						<p>Typed Interface for the config of the <code>AddData</code> and <code>SetData</code> action.
+						Holds an typed array of entities to be added to the store.</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SchemaMap</span>
+						<a href="_actions_normalize_.normalizeactionschemaconfig.html" class="tsd-signature-type">NormalizeActionSchemaConfig</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">NormalizeActionConfig</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
-				<h3 class="tsd-before-signature">Indexable</h3>
-				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>schemaKey: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></div>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>A map of schema names to object property names.
-						Used for removing child properties of an entity.</p>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section tsd-is-external">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_actions_normalize_.normalizeactionconfig.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="_actions_normalize_.normalizeactionconfig.html#schema" class="tsd-kind-icon">schema</a></li>
+							</ul>
+						</section>
 					</div>
-				</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/ab53558/src/actions/normalize.ts#L78">actions/normalize.ts:78</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The array of entities which should be normalized and added to the store.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="schema" class="tsd-anchor"></a>
+					<h3>schema</h3>
+					<div class="tsd-signature tsd-kind-icon">schema<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Entity</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_actions_normalize_.normalizeactionschemaconfig.html">NormalizeActionSchemaConfig</a>.<a href="_actions_normalize_.normalizeactionschemaconfig.html#schema">schema</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/michaelkrone/ngrx-normalizr/blob/ab53558/src/actions/normalize.ts#L67">actions/normalize.ts:67</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Schema definition of the entity. Used for de-/ and normalizing given entities.</p>
+						</div>
+					</div>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -133,9 +184,21 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/_actions_normalize_.setdata.html" class="tsd-kind-icon">Set<wbr>Data</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
 						<a href="_actions_normalize_.normalizeactionconfig.html" class="tsd-kind-icon">Normalize<wbr>Action<wbr>Config</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_actions_normalize_.normalizeactionconfig.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="_actions_normalize_.normalizeactionconfig.html#schema" class="tsd-kind-icon">schema</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-external">
 						<a href="_actions_normalize_.normalizeactioncreators.html" class="tsd-kind-icon">Normalize<wbr>Action<wbr>Creators</a>
 					</li>
@@ -151,13 +214,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
 						<a href="_actions_normalize_.normalizeremoveactionpayload.html" class="tsd-kind-icon">Normalize<wbr>Remove<wbr>Action<wbr>Payload</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-external">
 						<a href="_actions_normalize_.schemamap.html" class="tsd-kind-icon">Schema<wbr>Map</a>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-external tsd-is-not-exported">
 						<a href="../modules/_actions_normalize_.html#action_namespace" class="tsd-kind-icon">ACTION_<wbr>NAMESPACE</a>
 					</li>
