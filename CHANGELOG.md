@@ -1,3 +1,13 @@
+* _2.0.0_
+  * Serializable actions. _Details:_  The normalization of entities is now perfomed in the action constructor. Previously it was handled by the reducer. As ([@PachowStudios](https://github.com/PachowStudios)) pointed out in Issue #16, ngrx-normalizr actions were not serializable. This could raise issues with other redux/ngrx libraries (e.g. @ngrx/router-store). The normalizr `schema.Entity` is not part of the action payload anymore, hence the interfaces for describing the payload have changed and the action constructor does no longer take the payload as an argument. As long as you did not type any action parameters in your code, you **might** have no problem updating, since the arity/keys of the constructor API did not change - see Breaking Changes) **Closes #16**
+
+  * **Breaking Changes**
+    * Action constructor parameters changed from  `NormalizeDataPayload` to `NormalizeActionConfig` and from `NormalizeRemovePayload` to `NormalizeRemoveActionConfig`
+    *
+    * Action `payload` property types changed from `NormalizeDataPayload` to `NormalizeActionPayload` and from `NormalizeRemovePayload` to `NormalizeRemoveActionPayload`
+    * (might break) Internal used interface `SchemaPayload` replaced by `NormalizeActionSchemaConfig`
+
+
 * _1.0.4_
     * exporting `SchemaSelectors` interface ([@JSantha](https://github.com/JSantha))
 
