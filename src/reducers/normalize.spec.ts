@@ -255,8 +255,8 @@ describe('reducers', () => {
 			});
 
 			describe('entitiesProjector', () => {
-				it('should take entities as an argument', () => {
-					projectors.entitiesProjector.should.have.lengthOf(1);
+				it('should take entities and optionally ids as arguments', () => {
+					projectors.entitiesProjector.should.have.lengthOf(2);
 				});
 
 				it('should project the given schema to denormalized entities', () => {

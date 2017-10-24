@@ -235,7 +235,7 @@ function createEntitiesSelector<T>(
  */
 function createEntityProjector<T>(schema: schema.Entity) {
 	return (entities: {}, id: string) =>
-		createDenormalizer(schema)(entities, id) as T;
+	createSingleDenormalizer(schema)(entities, id) as T;
 }
 
 /**
@@ -243,22 +243,40 @@ function createEntityProjector<T>(schema: schema.Entity) {
  * @param schema The schema to bind this selector to
  */
 function createEntitiesProjector<T>(schema: schema.Entity) {
-	return (entities: {}) => createDenormalizer(schema)(entities) as T[];
+	return (entities: {}, ids?: Array<string>) => createMultipleDenormalizer(schema)(entities, ids) as T[];
 }
 
 /**
  * Create a schema bound denormalizer.
  * @param schema The schema to bind this selector to
  */
-function createDenormalizer(schema: schema.Entity) {
+function createSingleDenormalizer(schema: schema.Entity) {
 	const key = schema.key;
-	return (entities: { [key: string]: {} }, id?: string) => {
+	return (entities: { [key: string]: {} }, id: string) => {
 		/* istanbul ignore if */
 		if (!entities || !entities[key]) {
 			return;
 		}
-		const data = id ? { [key]: [id] } : { [key]: Object.keys(entities[key]) };
-		const denormalized = denormalize(data, { [key]: [schema] }, entities);
-		return id ? denormalized[key][0] : denormalized[key];
+
+		const denormalized = denormalize({ [key]: [id] }, { [key]: [schema] }, entities);
+		return denormalized[key][0];
 	};
 }
+
+/**
+ * Create a schema bound denormalizer.
+ * @param schema The schema to bind this selector to
+ */
+function createMultipleDenormalizer(schema: schema.Entity) {
+	const key = schema.key;
+	return (entities: { [key: string]: {} }, ids?: Array<string>) => {
+		/* istanbul ignore if */
+		if (!entities || !entities[key]) {
+			return;
+		}
+		const data = ids ? { [key]: ids } : { [key]: Object.keys(entities[key]) };
+		const denormalized = denormalize(data, { [key]: [schema] }, entities);
+		return denormalized[key];
+	};
+}
+
