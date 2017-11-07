@@ -18,13 +18,13 @@ npm i ngrx-normalizr
 ```
 
 ### Peer dependencies
-*ngrx-normalizr* defines [normalizr](https://github.com/paularmstrong/normalizr) and [@ngrx-store](https://github.com/ngrx/platform/blob/master/docs/store/README.md) as its peer dependencies, so you need to install them if not present already:
+*ngrx-normalizr* [@ngrx-store](https://github.com/ngrx/platform/blob/master/docs/store/README.md) as its peer dependencies, so you need to install them if not present already:
 
 > *ngrx-normalizr* itself does not rely on any [Angular](https://angular.io) feature.
 
 ```sh
-yarn add @ngrx/store normalizr
-npm i @ngrx/store normalizr
+yarn add @ngrx/store
+npm i @ngrx/store
 ```
 
 ## Usage
@@ -173,7 +173,7 @@ const schemaSelectors = createSchemaSelectors<User>(userSchema);
 `createSchemaSelectors` will return schema bound selectors (instance of `SchemaSelectors`):
 * `getEntities` - ` MemoizedSelector<{}, T[]>` Returns all denormalized entities for the schema
 * `getNormalizedEntities` - `MemoizedSelector<any, EntityMap>` Returns all normalized (raw) state entities of every schema (the whole entities state)
-* `entitiesProjector` - `(entities: {}) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array
+* `entitiesProjector` - `(entities: {}, ids?: Array<string>) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array
 * `entityProjector` - `(entities: {}, id: string) => T` Projector function for denormalizing a single normalized entity with the given id
 
 You might create several selectors with several schemas, i.e. a *listView* schema, which only denormalizes the data used in the list
@@ -196,7 +196,7 @@ const getUsers = createSelector(
 );
 
 ```
-The `entitiesProjector` simply takes an object of normalized entity data and applies the denormalization with the bound schema.
+The `entitiesProjector` simply takes an object of normalized entity data and applies the denormalization with the bound schema. Optionally an array of id strings can be passed as a second parameter to perform denormalization for the given id's only.
 
 #### Composing schema selectors
 To query and denormalize specific data you can use the *@ngrx/store* [`createSelectors`](https://github.com/ngrx/platform/blob/master/docs/store/selectors.md#createselector) function and compose them with the schema bound

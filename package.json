@@ -1,6 +1,6 @@
 {
 	"name": "ngrx-normalizr",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Normalizing state reducer for ngrx applications",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -9,8 +9,7 @@
 		"prepublishOnly": "yarn aot",
 		"tsc": "rm -rf ./dist && tsc",
 		"aot": "rm -rf ./dist && ./node_modules/.bin/ngc",
-		"docs":
-			"rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
+		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
 		"docs-github": "touch ./docs/.nojekyll",
 		"test": "./node_modules/.bin/karma start karma-ci.conf.js"
 	},
@@ -22,20 +21,22 @@
 	},
 	"license": "MIT",
 	"peerDependencies": {
-		"@ngrx/store": "^4.0.3",
+		"@ngrx/store": "^4.0.3"
+	},
+	"dependencies": {
 		"normalizr": "^3.2.3"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@angular/compiler": "^4.3.5",
 		"@angular/compiler-cli": "^4.3.5",
 		"@angular/core": "^4.3.5",
-		"@angular/platform-server": "^4.3.5",
 		"@ngrx/store": "^4.0.3",
 		"@types/jasmine": "^2.5.53",
 		"@types/jasminewd2": "^2.0.2",
+		"@types/lodash": "^4.14.82",
 		"@types/node": "^8.0.24",
 		"@types/should": "^8.3.0",
+		"codelyzer": "^3.2.1",
 		"jasmine-core": "^2.7.0",
 		"jasmine-spec-reporter": "^4.2.1",
 		"karma": "^1.7.0",
@@ -46,7 +47,6 @@
 		"karma-jasmine": "^1.1.0",
 		"karma-jasmine-html-reporter": "^0.2.2",
 		"karma-typescript": "^3.0.5",
-		"normalizr": "^3.2.4",
 		"rxjs": "^5.4.3",
 		"should": "^11.2.1",
 		"ts-node": "^3.3.0",
