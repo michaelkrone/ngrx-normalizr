@@ -29,8 +29,8 @@
     tsickle "^0.21.0"
 
 "@ngrx/store@^4.0.3":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-4.1.0.tgz#8c074cbc6197e259cd9492e85a76c3c67dbea173"
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-4.1.1.tgz#680e34df2775e8852754ed777ffac95bd81b7de0"
 
 "@types/jasmine@*", "@types/jasmine@^2.5.53":
   version "2.6.3"
