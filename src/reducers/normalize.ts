@@ -235,7 +235,7 @@ function createEntitiesSelector<T>(
  */
 function createEntityProjector<T>(schema: schema.Entity) {
 	return (entities: {}, id: string) =>
-	createSingleDenormalizer(schema)(entities, id) as T;
+		createSingleDenormalizer(schema)(entities, id) as T;
 }
 
 /**
@@ -243,7 +243,8 @@ function createEntityProjector<T>(schema: schema.Entity) {
  * @param schema The schema to bind this selector to
  */
 function createEntitiesProjector<T>(schema: schema.Entity) {
-	return (entities: {}, ids?: Array<string>) => createMultipleDenormalizer(schema)(entities, ids) as T[];
+	return (entities: {}, ids?: Array<string>) =>
+		createMultipleDenormalizer(schema)(entities, ids) as T[];
 }
 
 /**
@@ -258,7 +259,11 @@ function createSingleDenormalizer(schema: schema.Entity) {
 			return;
 		}
 
-		const denormalized = denormalize({ [key]: [id] }, { [key]: [schema] }, entities);
+		const denormalized = denormalize(
+			{ [key]: [id] },
+			{ [key]: [schema] },
+			entities
+		);
 		return denormalized[key][0];
 	};
 }
@@ -279,4 +284,3 @@ function createMultipleDenormalizer(schema: schema.Entity) {
 		return denormalized[key];
 	};
 }
-
