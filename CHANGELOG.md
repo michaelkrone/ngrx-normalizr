@@ -1,5 +1,5 @@
 * _2.1.0_
-  entitiesProjector takes an optional array of id strings ([@juanpmarin](https://github.com/juanpmarin)) Closes #18
+  * entitiesProjector takes an optional array of id strings ([@juanpmarin](https://github.com/juanpmarin)) Closes #18
 
 * _2.0.0_
   * Serialization support for actions. _Details:_  The normalization of entities is now perfomed in the action constructor. Previously it was handled by the reducer. As ([@PachowStudios](https://github.com/PachowStudios)) pointed out in Issue #16, ngrx-normalizr actions were not serializable. This could raise issues with other redux/ngrx libraries. The normalizr `schema.Entity` is not part of the action payload anymore, hence the interfaces for describing the payload have changed and the action constructor does no longer take the payload itself as an argument. As long as you did not type any action parameters in your code or dispatched actions directly with a simle pojo by using the exported action type names, you should have no problem updating, since the arity/keys of the constructor API did not change - see Breaking Changes. Closes #16
