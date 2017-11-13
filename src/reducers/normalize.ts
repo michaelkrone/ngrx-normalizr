@@ -6,6 +6,7 @@ import { createSelector, MemoizedSelector } from '@ngrx/store';
 import { denormalize, schema } from 'normalizr';
 
 import { NormalizeActionTypes } from '../actions/normalize';
+import { NormalizeChildActionPayload } from '../index';
 
 /**
  * The state key under which the normalized state will be stored
@@ -110,6 +111,36 @@ export function normalized(
 					},
 					{ ...state.entities }
 				)
+			};
+		}
+
+		case NormalizeActionTypes.ADD_CHILD_DATA: {
+			const {
+				result,
+				entities,
+				parentSchemaKey,
+				parentProperty,
+				parentId
+			} = action.payload as NormalizeChildActionPayload;
+			const newEntities = { ...state.entities };
+
+			if (
+				newEntities[parentSchemaKey] &&
+				newEntities[parentSchemaKey][parentId] &&
+				newEntities[parentSchemaKey][parentId][parentProperty] &&
+				Array.isArray(newEntities[parentSchemaKey][parentId][parentProperty])
+			) {
+				newEntities[parentSchemaKey][parentId][parentProperty].push(
+					Object.keys(entities)
+				);
+			}
+
+			return {
+				result,
+				entities: Object.keys(entities).reduce((p: any, c: string) => {
+					p[c] = { ...p[c], ...entities[c] };
+					return p;
+				}, newEntities)
 			};
 		}
 

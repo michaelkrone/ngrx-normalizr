@@ -7,8 +7,20 @@ import * as reducer from './normalize';
 const childSchema = new schema.Entity('child');
 const mySchema = new schema.Entity('parent', { childs: [childSchema] });
 
+interface Child {
+	id: string;
+	property: string;
+}
+
+interface Parent {
+	id: string;
+	property: string;
+	childs: [Child];
+}
+
 describe('reducers', () => {
-	let data;
+	let data: Parent[];
+	let childData: Child[];
 
 	beforeEach(() => {
 		data = [
@@ -29,6 +41,11 @@ describe('reducers', () => {
 				]
 			}
 		];
+
+		childData = [
+			{ id: '5', property: 'new-child-value' },
+			{ id: '6', property: 'new-child-value' }
+		];
 	});
 
 	describe('reducer function', () => {
@@ -46,12 +63,27 @@ describe('reducers', () => {
 		});
 
 		describe('handling actions', () => {
-			let addAction1, addAction2, setAction1;
+			let addAction1, addAction2, setAction1, addChildAction1;
 
 			beforeEach(() => {
-				addAction1 = new actions.AddData({ data: [data[0]], schema: mySchema });
-				addAction2 = new actions.AddData({ data: [data[1]], schema: mySchema });
-				setAction1 = new actions.SetData({ data: [data[1]], schema: mySchema });
+				addAction1 = new actions.AddData<Parent>({
+					data: [data[0]],
+					schema: mySchema
+				});
+				addAction2 = new actions.AddData<Parent>({
+					data: [data[1]],
+					schema: mySchema
+				});
+				setAction1 = new actions.SetData<Parent>({
+					data: [data[1]],
+					schema: mySchema
+				});
+				addChildAction1 = new actions.AddChildData<Child>({
+					data: childData,
+					schema: mySchema,
+					childSchema,
+					parentId: data[0].id
+				});
 			});
 
 			describe('SetData action', () => {
@@ -82,10 +114,32 @@ describe('reducers', () => {
 					const state = reducer.normalized(undefined, addAction1);
 					state.entities.should.have.properties('parent', 'child');
 					Object.keys(state.entities.parent).should.eql([data[0].id]);
+					console.log(state.entities.child);
 					Object.keys(state.entities.child).should.eql(
 						data[0].childs.map(c => c.id)
 					);
 					state.result.should.eql([data[0].id]);
+				});
+
+				it('should update data in the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, addAction2);
+					state.entities.should.have.properties('parent', 'child');
+					state.entities.parent.should.have.properties(data.map(d => d.id));
+					state.result.should.eql([data[1].id]);
+				});
+			});
+
+			describe('AddChildData action', () => {
+				it('should add child data to the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, addChildAction1);
+					state.entities.should.have.properties('parent', 'child');
+					Object.keys(state.entities.parent).should.eql([data[0].id]);
+					Object.keys(state.entities.child).should.containDeep(
+						[...childData, ...data[0].childs].map(c => c.id)
+					);
+					state.result.should.eql(childData.map(c => c.id));
 				});
 
 				it('should update data in the store', () => {

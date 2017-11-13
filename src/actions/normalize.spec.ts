@@ -27,6 +27,10 @@ describe('Normalize actions', () => {
 			]
 		}
 	];
+	const childData = [
+		{ id: '5', property: 'new-child-value' },
+		{ id: '6', property: 'new-child-value' }
+	];
 
 	function checkSerialization(action: Action) {
 		const deserialized = JSON.parse(JSON.stringify(action));
@@ -53,6 +57,24 @@ describe('Normalize actions', () => {
 
 		it('should be serializable', () => {
 			checkSerialization(new actions.AddData({ data, schema }));
+		});
+	});
+
+	describe('AddChildData', () => {
+		it('should be exported', () => {
+			actions.AddChildData.should.be.a.Function();
+		});
+
+		it('should be serializable', () => {
+			const parentId = data[0].id;
+			checkSerialization(
+				new actions.AddChildData({
+					data: childData,
+					schema,
+					parentId,
+					childSchema
+				})
+			);
 		});
 	});
 
@@ -103,6 +125,22 @@ describe('Normalize actions', () => {
 				action.should.have.properties('payload');
 				action.payload.should.have.properties('entities', 'result');
 				action.payload.entities.should.eql(normalize(data, [schema]).entities);
+			});
+		});
+
+		describe('AddChildData creator', () => {
+			const action = result.addChildData(childData, childSchema, data[0].id);
+
+			it('should create an AddChildData action', () => {
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties('entities', 'result');
+				action.payload.entities.should.eql(
+					normalize(childData, [childSchema]).entities
+				);
+				action.payload.parentSchemaKey.should.eql('parent');
+				action.payload.parentProperty.should.eql('childs');
+				action.payload.parentId.should.eql(data[0].id);
 			});
 		});
 
