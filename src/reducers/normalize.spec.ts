@@ -62,8 +62,12 @@ describe('reducers', () => {
 			state.result.should.eql([]);
 		});
 
-		describe('handling actions', () => {
-			let addAction1, addAction2, setAction1, addChildAction1;
+		describe('handling action', () => {
+			let addAction1,
+				addAction2,
+				setAction1,
+				addChildAction1,
+				removeChildAction1;
 
 			beforeEach(() => {
 				addAction1 = new actions.AddData<Parent>({
@@ -84,9 +88,15 @@ describe('reducers', () => {
 					childSchema,
 					parentId: data[0].id
 				});
+				removeChildAction1 = new actions.RemoveChildData({
+					id: data[0].childs[0].id,
+					childSchema,
+					schema: mySchema,
+					parentId: data[0].id
+				});
 			});
 
-			describe('SetData action', () => {
+			describe('SetData', () => {
 				it('should set data in the store', () => {
 					const state = reducer.normalized(undefined, setAction1);
 					state.entities.should.have.properties('parent', 'child');
@@ -109,12 +119,11 @@ describe('reducers', () => {
 				});
 			});
 
-			describe('AddData action', () => {
+			describe('AddData', () => {
 				it('should add data to the store', () => {
 					const state = reducer.normalized(undefined, addAction1);
 					state.entities.should.have.properties('parent', 'child');
 					Object.keys(state.entities.parent).should.eql([data[0].id]);
-					console.log(state.entities.child);
 					Object.keys(state.entities.child).should.eql(
 						data[0].childs.map(c => c.id)
 					);
@@ -130,7 +139,7 @@ describe('reducers', () => {
 				});
 			});
 
-			describe('AddChildData action', () => {
+			describe('AddChildData', () => {
 				it('should add child data to the store', () => {
 					let state = reducer.normalized(undefined, addAction1);
 					state = reducer.normalized(state, addChildAction1);
@@ -151,7 +160,7 @@ describe('reducers', () => {
 				});
 			});
 
-			describe('RemoveData action', () => {
+			describe('RemoveData', () => {
 				it('should remove data from the store', () => {
 					let state = reducer.normalized(undefined, addAction1);
 					state = reducer.normalized(
@@ -217,6 +226,18 @@ describe('reducers', () => {
 					should(
 						state.entities.child[denormalizedData[0].child.id]
 					).be.undefined();
+				});
+			});
+
+			describe('RemoveChildData', () => {
+				it('should remove child data from the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, removeChildAction1);
+					should(state.entities.parent[data[0].id]).be.ok();
+					should(state.entities.child[data[0].childs[0].id]).not.be.ok();
+					state.entities.parent[data[0].id].childs.should.not.containDeep(
+						data[0].childs[0].id
+					);
 				});
 			});
 		});

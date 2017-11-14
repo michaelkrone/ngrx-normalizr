@@ -90,6 +90,23 @@ describe('Normalize actions', () => {
 		});
 	});
 
+	describe('RemoveChildData', () => {
+		it('should be exported', () => {
+			actions.RemoveChildData.should.be.a.Function();
+		});
+
+		it('should be serializable', () => {
+			const parentId = data[0].id;
+			checkSerialization(
+				new actions.RemoveChildData({
+					id: data[0].id,
+					schema,
+					parentId,
+					childSchema
+				})
+			);
+		});
+	});
 	describe('creator', () => {
 		const result = actions.actionCreators(schema);
 
@@ -172,6 +189,29 @@ describe('Normalize actions', () => {
 				action.payload.should.have.properties('id', 'removeChildren');
 				action.payload.id.should.eql(id);
 				(action.payload.removeChildren === null).should.be.true();
+			});
+		});
+
+		describe('RemoveChildData creator', () => {
+			const action = result.removeChildData(
+				childData[0].id,
+				childSchema,
+				data[0].id
+			);
+
+			it('should create an RemoveChildData action', () => {
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties(
+					'parentProperty',
+					'parentSchemaKey',
+					'parentId',
+					'id'
+				);
+				action.payload.id.should.eql(childData[0].id);
+				action.payload.parentSchemaKey.should.eql('parent');
+				action.payload.parentProperty.should.eql('childs');
+				action.payload.parentId.should.eql(data[0].id);
 			});
 		});
 	});

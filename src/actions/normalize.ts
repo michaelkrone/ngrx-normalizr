@@ -77,8 +77,7 @@ export interface NormalizeActionConfig<T> extends NormalizeActionSchemaConfig {
 }
 
 /**
- * Interface for a normalizer.normalize call
- * The result property is expected to be an array of strings
+ * Interface for child data related actions
  */
 export interface NormalizeChildActionPayload extends NormalizeActionPayload {
 	/**
@@ -95,6 +94,36 @@ export interface NormalizeChildActionPayload extends NormalizeActionPayload {
    * Schema key of the parent's property
    */
 	parentSchemaKey: string;
+}
+
+/**
+ * Interface for the payload of the `RemoveChildAction`
+ */
+export interface NormalizeRemoveChildActionPayload {
+	/**
+   * The id of the entity that should be removed
+   */
+	id: NormalizeRemoveActionPayload['id'];
+
+	/**
+   * The key of the child schema
+   */
+	childSchemaKey: string;
+
+	/**
+   * The id of the parent entity
+   */
+	parentId: NormalizeChildActionPayload['parentId'];
+
+	/**
+     * Key of the parent's property which holds the child references
+     */
+	parentProperty: NormalizeChildActionPayload['parentProperty'];
+
+	/**
+     * Schema key of the parent's property
+     */
+	parentSchemaKey: NormalizeChildActionPayload['parentSchemaKey'];
 }
 
 /**
@@ -120,6 +149,28 @@ export interface NormalizeRemoveActionConfig
  */
 export interface NormalizeChildActionConfig<T>
 	extends NormalizeActionConfig<T> {
+	/**
+   * The schema of the child data to add
+   */
+	childSchema: schema.Entity;
+
+	/**
+   * The id of the parent entity
+   */
+	parentId: NormalizeChildActionPayload['parentId'];
+}
+
+/**
+ * Interface for the payload of the `RemoveData` action.
+ * Accepts an `id` and an optional `removeChildren` property.
+ */
+export interface NormalizeRemoveChildActionConfig
+	extends NormalizeActionSchemaConfig {
+	/**
+   * The id of the entity that should be removed
+   */
+	id: NormalizeRemoveActionPayload['id'];
+
 	/**
    * The schema of the child data to add
    */
@@ -161,6 +212,15 @@ export interface NormalizeActionCreators<T> {
 		id: NormalizeRemoveActionConfig['id'],
 		removeChildren?: NormalizeRemoveActionConfig['removeChildren']
 	) => RemoveData;
+
+	/**
+   * Action creator for the `AddChildData` action
+   */
+	removeChildData: (
+		id: NormalizeRemoveChildActionConfig['id'],
+		childSchema: NormalizeRemoveChildActionConfig['childSchema'],
+		parentId: NormalizeRemoveChildActionConfig['parentId']
+	) => RemoveChildData;
 }
 
 /**
@@ -186,6 +246,11 @@ export class NormalizeActionTypes {
    * Action type of the `RemoveData` action.
    */
 	static readonly REMOVE_DATA = `${ACTION_NAMESPACE} Remove Data`;
+
+	/**
+   * Action type of the `RemoveChildData` action.
+   */
+	static readonly REMOVE_CHILD_DATA = `${ACTION_NAMESPACE} Remove Child Data`;
 }
 
 /**
@@ -244,7 +309,7 @@ export class AddData<T> implements Action {
  */
 export class AddChildData<T> implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.ADD_DATA`
+   * The action type: `NormalizeActionTypes.ADD_CHILD_DATA`
    */
 	readonly type = NormalizeActionTypes.ADD_CHILD_DATA;
 
@@ -260,28 +325,10 @@ export class AddChildData<T> implements Action {
    */
 	constructor(config: NormalizeChildActionConfig<T>) {
 		const { data, schema, parentId, childSchema } = config;
-		const relations: {
-			[key: string]: schema.Entity | [schema.Entity];
-		} = (schema as any).schema;
-		let parentProperty = null;
-
-		if (relations) {
-			Object.keys(relations).some(k => {
-				let key = Array.isArray(relations[k])
-					? (relations[k] as [schema.Entity])[0].key
-					: (relations[k] as schema.Entity).key;
-
-				if (key === childSchema.key) {
-					parentProperty = k;
-					return true;
-				}
-			});
-		}
-
 		this.payload = {
 			...(normalize(data, [childSchema]) as NormalizeActionPayload),
 			parentSchemaKey: schema.key,
-			parentProperty,
+			parentProperty: getRelationProperty(schema, childSchema),
 			parentId
 		};
 	}
@@ -334,6 +381,38 @@ export class RemoveData implements Action {
 }
 
 /**
+ * Action for removing data from the store.
+ * Also see `NormalizeRemovePayload`.
+ */
+export class RemoveChildData implements Action {
+	/**
+   * The action type: `NormalizeActionTypes.REMOVE_CHILD_DATA`
+   */
+	readonly type = NormalizeActionTypes.REMOVE_CHILD_DATA;
+
+	/**
+   * The payload will be an object of the normalized entity map as `entities`
+   * and the original sorted id's as an array in the `result` property.
+   */
+	public payload: NormalizeRemoveChildActionPayload;
+
+	/**
+   * RemoveData Constructor
+   * @param payload The action payload used in the reducer
+   */
+	constructor(config: NormalizeRemoveChildActionConfig) {
+		let { id, schema, childSchema, parentId } = config;
+		this.payload = {
+			id,
+			childSchemaKey: childSchema.key,
+			parentProperty: getRelationProperty(schema, childSchema),
+			parentSchemaKey: schema.key,
+			parentId
+		};
+	}
+}
+
+/**
  * Create a add of action creators for the `AddData` and `RemoveData` actions.
  * This is provided for convenience.
  * @param schema The schema the action creators should be bound to
@@ -357,8 +436,8 @@ export function actionCreators<T>(
 			new AddData<T>({ data, schema }),
 
 		/**
-     * Action creator for the `AddData` action.
-     * @returns A new instance of the `AddData` action with the given schema.
+     * Action creator for the `AddChildData` action.
+     * @returns A new instance of the `AddChildData` action with the given schema.
      */
 		addChildData: <C>(
 			data: NormalizeChildActionConfig<C>['data'],
@@ -373,6 +452,45 @@ export function actionCreators<T>(
 		removeData: (
 			id: NormalizeRemoveActionConfig['id'],
 			removeChildren?: NormalizeRemoveActionConfig['removeChildren']
-		) => new RemoveData({ id, schema, removeChildren })
+		) => new RemoveData({ id, schema, removeChildren }),
+
+		/**
+     * Action creator for the `RemoveChildData` action.
+     * @returns A new instance of the `RemoveChildData` action with the given schema.
+     */
+		removeChildData: (
+			id: NormalizeRemoveChildActionConfig['id'],
+			childSchema: NormalizeRemoveChildActionConfig['childSchema'],
+			parentId: NormalizeRemoveChildActionConfig['parentId']
+		) => new RemoveChildData({ id, schema, childSchema, parentId })
 	};
+}
+
+/**
+ * Return the parents property name the child schema is related to
+ * @param schema The parent schema
+ * @param childSchema The child schema
+ */
+function getRelationProperty(
+	schema: schema.Entity,
+	childSchema: schema.Entity
+): string {
+	let parentProperty = null;
+	const relations: {
+		[key: string]: schema.Entity | [schema.Entity];
+	} = (schema as any).schema;
+
+	if (relations) {
+		Object.keys(relations).some(k => {
+			let key = Array.isArray(relations[k])
+				? (relations[k] as [schema.Entity])[0].key
+				: (relations[k] as schema.Entity).key;
+
+			if (key === childSchema.key) {
+				parentProperty = k;
+				return true;
+			}
+		});
+	}
+	return parentProperty;
 }

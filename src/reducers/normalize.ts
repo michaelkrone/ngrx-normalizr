@@ -6,7 +6,10 @@ import { createSelector, MemoizedSelector } from '@ngrx/store';
 import { denormalize, schema } from 'normalizr';
 
 import { NormalizeActionTypes } from '../actions/normalize';
-import { NormalizeChildActionPayload } from '../index';
+import {
+	NormalizeChildActionPayload,
+	NormalizeRemoveChildActionPayload
+} from '../index';
 
 /**
  * The state key under which the normalized state will be stored
@@ -170,6 +173,42 @@ export function normalized(
 
 			return {
 				result: state.result,
+				entities
+			};
+		}
+
+		case NormalizeActionTypes.REMOVE_CHILD_DATA: {
+			const {
+				id,
+				childSchemaKey,
+				parentProperty,
+				parentSchemaKey,
+				parentId
+			} = action.payload as NormalizeRemoveChildActionPayload;
+			const entities = { ...state.entities };
+			const entity = entities[childSchemaKey][id];
+
+			if (!entity) {
+				return state;
+			}
+
+			if (
+				entities[parentSchemaKey] &&
+				entities[parentSchemaKey][parentId] &&
+				entities[parentSchemaKey][parentId][parentProperty] &&
+				Array.isArray(entities[parentSchemaKey][parentId][parentProperty]) &&
+				entities[parentSchemaKey][parentId][parentProperty].indexOf(id) > -1
+			) {
+				const index = entities[parentSchemaKey][parentId][
+					parentProperty
+				].indexOf(id);
+				entities[parentSchemaKey][parentId][parentProperty].splice(index, 1);
+			}
+
+			delete entities[childSchemaKey][id];
+
+			return {
+				...state,
 				entities
 			};
 		}
