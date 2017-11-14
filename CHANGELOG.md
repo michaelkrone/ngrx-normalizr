@@ -1,3 +1,6 @@
+* _2.2.0_
+  * Support for adding and removing child data
+
 * _2.1.0_
   * entitiesProjector takes an optional array of id strings ([@juanpmarin](https://github.com/juanpmarin)) Closes #18
 
