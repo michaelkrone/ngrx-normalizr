@@ -480,12 +480,14 @@ function getRelationProperty(
 		[key: string]: schema.Entity | [schema.Entity];
 	} = (schema as any).schema;
 
+	/* istanbul ignore else */
 	if (relations) {
 		Object.keys(relations).some(k => {
 			let key = Array.isArray(relations[k])
 				? (relations[k] as [schema.Entity])[0].key
 				: (relations[k] as schema.Entity).key;
 
+			/* istanbul ignore else */
 			if (key === childSchema.key) {
 				parentProperty = k;
 				return true;
