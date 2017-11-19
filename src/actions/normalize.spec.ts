@@ -70,7 +70,7 @@ describe('Normalize actions', () => {
 			checkSerialization(
 				new actions.AddChildData({
 					data: childData,
-					schema,
+					parentSchema: schema,
 					parentId,
 					childSchema
 				})
@@ -100,7 +100,7 @@ describe('Normalize actions', () => {
 			checkSerialization(
 				new actions.RemoveChildData({
 					id: data[0].id,
-					schema,
+					parentSchema: schema,
 					parentId,
 					childSchema
 				})

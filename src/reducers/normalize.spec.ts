@@ -84,14 +84,14 @@ describe('reducers', () => {
 				});
 				addChildAction1 = new actions.AddChildData<Child>({
 					data: childData,
-					schema: mySchema,
+					parentSchema: mySchema,
 					childSchema,
 					parentId: data[0].id
 				});
 				removeChildAction1 = new actions.RemoveChildData({
 					id: data[0].childs[0].id,
 					childSchema,
-					schema: mySchema,
+					parentSchema: mySchema,
 					parentId: data[0].id
 				});
 			});
