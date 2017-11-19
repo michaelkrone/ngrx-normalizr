@@ -6,10 +6,7 @@ import { createSelector, MemoizedSelector } from '@ngrx/store';
 import { denormalize, schema } from 'normalizr';
 
 import { NormalizeActionTypes } from '../actions/normalize';
-import {
-	NormalizeChildActionPayload,
-	NormalizeRemoveChildActionPayload
-} from '../index';
+import { NormalizeChildActionPayload } from '../index';
 
 /**
  * The state key under which the normalized state will be stored
@@ -127,15 +124,9 @@ export function normalized(
 			} = action.payload as NormalizeChildActionPayload;
 			const newEntities = { ...state.entities };
 
-			if (
-				newEntities[parentSchemaKey] &&
-				newEntities[parentSchemaKey][parentId] &&
-				newEntities[parentSchemaKey][parentId][parentProperty] &&
-				Array.isArray(newEntities[parentSchemaKey][parentId][parentProperty])
-			) {
-				newEntities[parentSchemaKey][parentId][parentProperty].push(
-					Object.keys(entities)
-				);
+			/* istanbul ignore else */
+			if (getParentReferences(newEntities, action.payload)) {
+				newEntities[parentSchemaKey][parentId][parentProperty].push(...result);
 			}
 
 			return {
@@ -185,31 +176,28 @@ export function normalized(
 				parentSchemaKey,
 				parentId
 			} = action.payload as NormalizeRemoveChildActionPayload;
-			const entities = { ...state.entities };
-			const entity = entities[childSchemaKey][id];
+			const newEntities = { ...state.entities };
+			const entity = newEntities[childSchemaKey][id];
 
+			/* istanbul ignore if */
 			if (!entity) {
 				return state;
 			}
 
-			if (
-				entities[parentSchemaKey] &&
-				entities[parentSchemaKey][parentId] &&
-				entities[parentSchemaKey][parentId][parentProperty] &&
-				Array.isArray(entities[parentSchemaKey][parentId][parentProperty]) &&
-				entities[parentSchemaKey][parentId][parentProperty].indexOf(id) > -1
-			) {
-				const index = entities[parentSchemaKey][parentId][
-					parentProperty
-				].indexOf(id);
-				entities[parentSchemaKey][parentId][parentProperty].splice(index, 1);
+			const parentRefs = getParentReferences(newEntities, action.payload);
+			/* istanbul ignore else */
+			if (parentRefs && parentRefs.indexOf(id) > -1) {
+				newEntities[parentSchemaKey][parentId][parentProperty].splice(
+					parentRefs.indexOf(id),
+					1
+				);
 			}
 
-			delete entities[childSchemaKey][id];
+			delete newEntities[childSchemaKey][id];
 
 			return {
 				...state,
-				entities
+				entities: newEntities
 			};
 		}
 
@@ -353,4 +341,25 @@ function createMultipleDenormalizer(schema: schema.Entity) {
 		const denormalized = denormalize(data, { [key]: [schema] }, entities);
 		return denormalized[key];
 	};
+}
+
+/**
+ * @private
+ * Get the reference array from the parent entity
+ * @param entities normalized entity state object
+ * @param payload NormalizeChildActionPayload
+ */
+function getParentReferences(
+	entities: any,
+	payload: NormalizeChildActionPayload
+): string | undefined {
+	const { parentSchemaKey, parentProperty, parentId } = payload;
+	if (
+		entities[parentSchemaKey] &&
+		entities[parentSchemaKey][parentId] &&
+		entities[parentSchemaKey][parentId][parentProperty] &&
+		Array.isArray(entities[parentSchemaKey][parentId][parentProperty])
+	) {
+		return entities[parentSchemaKey][parentId][parentProperty];
+	}
 }

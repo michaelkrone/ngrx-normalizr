@@ -43,8 +43,8 @@ describe('reducers', () => {
 		];
 
 		childData = [
-			{ id: '5', property: 'new-child-value' },
-			{ id: '6', property: 'new-child-value' }
+			{ id: '5', property: 'new-child-value-1' },
+			{ id: '6', property: 'new-child-value-2' }
 		];
 	});
 
@@ -145,18 +145,13 @@ describe('reducers', () => {
 					state = reducer.normalized(state, addChildAction1);
 					state.entities.should.have.properties('parent', 'child');
 					Object.keys(state.entities.parent).should.eql([data[0].id]);
+					state.entities.parent[data[0].id].childs.should.containDeep(
+						[...childData, ...data[0].childs].map(c => c.id)
+					);
 					Object.keys(state.entities.child).should.containDeep(
 						[...childData, ...data[0].childs].map(c => c.id)
 					);
 					state.result.should.eql(childData.map(c => c.id));
-				});
-
-				it('should update data in the store', () => {
-					let state = reducer.normalized(undefined, addAction1);
-					state = reducer.normalized(state, addAction2);
-					state.entities.should.have.properties('parent', 'child');
-					state.entities.parent.should.have.properties(data.map(d => d.id));
-					state.result.should.eql([data[1].id]);
 				});
 			});
 
