@@ -81,7 +81,7 @@ Actions are used to set data in - and remove data from - the normalized store.
 
 ### Adding data
 To add data and automatically normalize it, *ngrx-normalizr* provides a `AddData` action. This action takes an object with `data` and `schema` as an argument. Entities are identified by their id attribute set in the passed schema.
-Existing entities will be overwritten by updated data, new entities will be added to the store.
+Existing entities will be overwritten by updated data, new entities will be added to the store. For adding related childs, an `AddChildData` action is provided.
 
 ###### Using `AddData` in an effect
 ```javascript
@@ -94,6 +94,29 @@ loadEffect$ = this.actions$
     new AddData<User>({ data, schema }),
     // dispatch to inform feature reducer
     new LoadSuccess(data)
+  ])
+  .catch(err => Observable.of(new LoadFail(err)));
+```
+
+#### Adding child data
+Adding a related child data to a parent entity can be done with the `AddChildData` action. Note that for this to work, the relation has to be defined in the schema. The action takes a couple of arguments which need to be given in an object:
+
+* `data`: Array of child entities to add
+* `childSchema`The `schema.Entity` of the child entity
+* `parentSchema`: The `schema.Entity` of the parent entity
+* `parentId`: The id of the entity to add child references to
+
+###### Using `AddChildData` in an effect
+```javascript
+@Effect()
+addPetEffect$ = this.actions$
+  .ofType(ADD_PET)
+  .switchMap(action => this.http.post('https://example.com/api/pets'))
+  .mergeMap((data: Pet[]) => [
+    // dispatch to add data to the store
+    new AddChildData<Pet>({ data, childSchema, parentSchema, parentId }),
+    // dispatch to inform feature reducer
+    new AddPetSuccess(data)
   ])
   .catch(err => Observable.of(new LoadFail(err)));
 ```
@@ -120,12 +143,36 @@ removeEffect$ = this.actions$
   ])
   .catch(err => Observable.of(new RemoveFail(err)));
 ```
+#### Removing child data
+Removing a child entity which is 1:1 related to a parent entity can be done with the `RemoveChildData` action. Note that for this to work, the relation has to be defined in the schema. The action takes a couple of arguments which need to be given in an object:
+
+* `id`: Id of the child entity that should be removed
+* `childSchema`The `schema.Entity` of the child entity
+* `parentSchema`: The `schema.Entity` of the parent entity
+* `parentId`: The id of the entity to remove child references from
+
+###### Using `AddChildData` in an effect
+```javascript
+@Effect()
+removePetEffect$ = this.actions$
+  .ofType(REMOVE_PET)
+  .switchMap(action => this.http.remove(`https://example.com/api/pets/${action.payload.id}`))
+  .mergeMap((data: Pet) => [
+    // dispatch to add data to the store
+    new RemoveChildData({ id: data.id, childSchema, parentId }),
+    // dispatch to inform feature reducer
+    new RemovePetSuccess(data)
+  ])
+  .catch(err => Observable.of(new LoadFail(err)));
+```
 
 ### Action creators
 For convenience, *ngrx-normalizr* provides an `actionCreators` function which will return an object with following schema bound action creators:
 * `setData` - `(data: T[]) => SetData<T>`
 * `addData` - `(data: T[]) => AddData<T>`
+* `addChildData<C>` - `(data: C[], childSchema: schema.Entity, parentId: string) => AddChildData`
 * `removeData` - `(id: string, removeChildren?: SchemaMap) => RemoveData`
+* `removeChildData` - `(id: string, childSchema: schema.Entity, parentId: string) => RemoveChildData`
 
 Action creators could be exported along whith other feature actions:
 ```javascript
@@ -173,7 +220,7 @@ const schemaSelectors = createSchemaSelectors<User>(userSchema);
 `createSchemaSelectors` will return schema bound selectors (instance of `SchemaSelectors`):
 * `getEntities` - ` MemoizedSelector<{}, T[]>` Returns all denormalized entities for the schema
 * `getNormalizedEntities` - `MemoizedSelector<any, EntityMap>` Returns all normalized (raw) state entities of every schema (the whole entities state)
-* `entitiesProjector` - `(entities: {}, ids?: Array<string>) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array
+* `entitiesProjector` - `(entities: {}, ids?: Array<string>) => T[]` Projector function for denormalizing a the set of normalized entities to an denormalized entity array. If no `ids` are given, all entities will be denormalized.
 * `entityProjector` - `(entities: {}, id: string) => T` Projector function for denormalizing a single normalized entity with the given id
 
 You might create several selectors with several schemas, i.e. a *listView* schema, which only denormalizes the data used in the list

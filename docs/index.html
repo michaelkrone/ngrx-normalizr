@@ -131,7 +131,7 @@ npm i @ngrx/store
 				<p>Actions are used to set data in - and remove data from - the normalized store.</p>
 				<h3 id="adding-data">Adding data</h3>
 				<p>To add data and automatically normalize it, <em>ngrx-normalizr</em> provides a <code>AddData</code> action. This action takes an object with <code>data</code> and <code>schema</code> as an argument. Entities are identified by their id attribute set in the passed schema.
-				Existing entities will be overwritten by updated data, new entities will be added to the store.</p>
+				Existing entities will be overwritten by updated data, new entities will be added to the store. For adding related childs, an <code>AddChildData</code> action is provided.</p>
 				<h6 id="using-adddata-in-an-effect">Using <code>AddData</code> in an effect</h6>
 				<pre><code class="lang-javascript">@Effect()
 loadEffect$ = <span class="hljs-keyword">this</span>.actions$
@@ -142,6 +142,27 @@ loadEffect$ = <span class="hljs-keyword">this</span>.actions$
     <span class="hljs-keyword">new</span> AddData&lt;User&gt;({ data, schema }),
     <span class="hljs-comment">// dispatch to inform feature reducer</span>
     <span class="hljs-keyword">new</span> LoadSuccess(data)
+  ])
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
+</code></pre>
+				<h4 id="adding-child-data">Adding child data</h4>
+				<p>Adding a related child data to a parent entity can be done with the <code>AddChildData</code> action. Note that for this to work, the relation has to be defined in the schema. The action takes a couple of arguments which need to be given in an object:</p>
+				<ul>
+					<li><code>data</code>: Array of child entities to add</li>
+					<li><code>childSchema</code>The <code>schema.Entity</code> of the child entity</li>
+					<li><code>parentSchema</code>: The <code>schema.Entity</code> of the parent entity</li>
+					<li><code>parentId</code>: The id of the entity to add child references to</li>
+				</ul>
+				<h6 id="using-addchilddata-in-an-effect">Using <code>AddChildData</code> in an effect</h6>
+				<pre><code class="lang-javascript">@Effect()
+addPetEffect$ = <span class="hljs-keyword">this</span>.actions$
+  .ofType(ADD_PET)
+  .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.post(<span class="hljs-string">'https://example.com/api/pets'</span>))
+  .mergeMap(<span class="hljs-function">(<span class="hljs-params">data: Pet[]</span>) =&gt;</span> [
+    <span class="hljs-comment">// dispatch to add data to the store</span>
+    <span class="hljs-keyword">new</span> AddChildData&lt;Pet&gt;({ data, childSchema, parentSchema, parentId }),
+    <span class="hljs-comment">// dispatch to inform feature reducer</span>
+    <span class="hljs-keyword">new</span> AddPetSuccess(data)
   ])
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
 </code></pre>
@@ -164,12 +185,35 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
   ])
   .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> RemoveFail(err)));
 </code></pre>
+				<h4 id="removing-child-data">Removing child data</h4>
+				<p>Removing a child entity which is 1:1 related to a parent entity can be done with the <code>RemoveChildData</code> action. Note that for this to work, the relation has to be defined in the schema. The action takes a couple of arguments which need to be given in an object:</p>
+				<ul>
+					<li><code>id</code>: Id of the child entity that should be removed</li>
+					<li><code>childSchema</code>The <code>schema.Entity</code> of the child entity</li>
+					<li><code>parentSchema</code>: The <code>schema.Entity</code> of the parent entity</li>
+					<li><code>parentId</code>: The id of the entity to remove child references from</li>
+				</ul>
+				<h6 id="using-addchilddata-in-an-effect">Using <code>AddChildData</code> in an effect</h6>
+				<pre><code class="lang-javascript">@Effect()
+removePetEffect$ = <span class="hljs-keyword">this</span>.actions$
+  .ofType(REMOVE_PET)
+  .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.remove(<span class="hljs-string">`https://example.com/api/pets/<span class="hljs-subst">${action.payload.id}</span>`</span>))
+  .mergeMap(<span class="hljs-function">(<span class="hljs-params">data: Pet</span>) =&gt;</span> [
+    <span class="hljs-comment">// dispatch to add data to the store</span>
+    <span class="hljs-keyword">new</span> RemoveChildData({ <span class="hljs-attr">id</span>: data.id, childSchema, parentId }),
+    <span class="hljs-comment">// dispatch to inform feature reducer</span>
+    <span class="hljs-keyword">new</span> RemovePetSuccess(data)
+  ])
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> Observable.of(<span class="hljs-keyword">new</span> LoadFail(err)));
+</code></pre>
 				<h3 id="action-creators">Action creators</h3>
 				<p>For convenience, <em>ngrx-normalizr</em> provides an <code>actionCreators</code> function which will return an object with following schema bound action creators:</p>
 				<ul>
 					<li><code>setData</code> - <code>(data: T[]) =&gt; SetData&lt;T&gt;</code></li>
 					<li><code>addData</code> - <code>(data: T[]) =&gt; AddData&lt;T&gt;</code></li>
+					<li><code>addChildData&lt;C&gt;</code> - <code>(data: C[], childSchema: schema.Entity, parentId: string) =&gt; AddChildData</code></li>
 					<li><code>removeData</code> - <code>(id: string, removeChildren?: SchemaMap) =&gt; RemoveData</code></li>
+					<li><code>removeChildData</code> - <code>(id: string, childSchema: schema.Entity, parentId: string) =&gt; RemoveChildData</code></li>
 				</ul>
 				<p>Action creators could be exported along whith other feature actions:</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { actionCreators } <span class="hljs-keyword">from</span> <span class="hljs-string">'ngrx-normalizr'</span>;
@@ -209,7 +253,7 @@ removeEffect$ = <span class="hljs-keyword">this</span>.actions$
 				<ul>
 					<li><code>getEntities</code> - <code>MemoizedSelector&lt;{}, T[]&gt;</code> Returns all denormalized entities for the schema</li>
 					<li><code>getNormalizedEntities</code> - <code>MemoizedSelector&lt;any, EntityMap&gt;</code> Returns all normalized (raw) state entities of every schema (the whole entities state)</li>
-					<li><code>entitiesProjector</code> - <code>(entities: {}, ids?: Array&lt;string&gt;) =&gt; T[]</code> Projector function for denormalizing a the set of normalized entities to an denormalized entity array</li>
+					<li><code>entitiesProjector</code> - <code>(entities: {}, ids?: Array&lt;string&gt;) =&gt; T[]</code> Projector function for denormalizing a the set of normalized entities to an denormalized entity array. If no <code>ids</code> are given, all entities will be denormalized.</li>
 					<li><code>entityProjector</code> - <code>(entities: {}, id: string) =&gt; T</code> Projector function for denormalizing a single normalized entity with the given id</li>
 				</ul>
 				<p>You might create several selectors with several schemas, i.e. a <em>listView</em> schema, which only denormalizes the data used in the list
