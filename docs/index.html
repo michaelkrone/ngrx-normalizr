@@ -200,7 +200,7 @@ removePetEffect$ = <span class="hljs-keyword">this</span>.actions$
   .switchMap(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.remove(<span class="hljs-string">`https://example.com/api/pets/<span class="hljs-subst">${action.payload.id}</span>`</span>))
   .mergeMap(<span class="hljs-function">(<span class="hljs-params">data: Pet</span>) =&gt;</span> [
     <span class="hljs-comment">// dispatch to add data to the store</span>
-    <span class="hljs-keyword">new</span> RemoveChildData({ <span class="hljs-attr">id</span>: data.id, childSchema, parentId }),
+    <span class="hljs-keyword">new</span> RemoveChildData({ <span class="hljs-attr">id</span>: data.id, childSchema, parentSchema, parentId }),
     <span class="hljs-comment">// dispatch to inform feature reducer</span>
     <span class="hljs-keyword">new</span> RemovePetSuccess(data)
   ])
