@@ -159,7 +159,7 @@ removePetEffect$ = this.actions$
   .switchMap(action => this.http.remove(`https://example.com/api/pets/${action.payload.id}`))
   .mergeMap((data: Pet) => [
     // dispatch to add data to the store
-    new RemoveChildData({ id: data.id, childSchema, parentId }),
+    new RemoveChildData({ id: data.id, childSchema, parentSchema, parentId }),
     // dispatch to inform feature reducer
     new RemovePetSuccess(data)
   ])
