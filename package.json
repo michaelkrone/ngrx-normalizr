@@ -1,6 +1,6 @@
 {
 	"name": "ngrx-normalizr",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Normalizing state reducer for ngrx applications",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -9,7 +9,8 @@
 		"prepublishOnly": "yarn aot",
 		"tsc": "rm -rf ./dist && tsc",
 		"aot": "rm -rf ./dist && ./node_modules/.bin/ngc",
-		"docs": "rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
+		"docs":
+			"rm -rf ./docs && typedoc --out ./docs --name ngrx-normalizr --readme ./README.md --module commonjs --target ES5 --theme default && yarn docs-github",
 		"docs-github": "touch ./docs/.nojekyll",
 		"test": "./node_modules/.bin/karma start karma-ci.conf.js"
 	},
@@ -51,7 +52,8 @@
 		"should": "^11.2.1",
 		"ts-node": "^3.3.0",
 		"tslint": "^5.6.0",
-		"typescript": "^2.4.2",
+		"typedoc": "0.8.0",
+		"typescript": "^2.5.3",
 		"zone.js": "^0.8.16"
 	}
 }

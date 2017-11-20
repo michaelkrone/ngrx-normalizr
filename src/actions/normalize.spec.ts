@@ -27,6 +27,10 @@ describe('Normalize actions', () => {
 			]
 		}
 	];
+	const childData = [
+		{ id: '5', property: 'new-child-value' },
+		{ id: '6', property: 'new-child-value' }
+	];
 
 	function checkSerialization(action: Action) {
 		const deserialized = JSON.parse(JSON.stringify(action));
@@ -56,6 +60,24 @@ describe('Normalize actions', () => {
 		});
 	});
 
+	describe('AddChildData', () => {
+		it('should be exported', () => {
+			actions.AddChildData.should.be.a.Function();
+		});
+
+		it('should be serializable', () => {
+			const parentId = data[0].id;
+			checkSerialization(
+				new actions.AddChildData({
+					data: childData,
+					parentSchema: schema,
+					parentId,
+					childSchema
+				})
+			);
+		});
+	});
+
 	describe('RemoveData', () => {
 		it('should be exported', () => {
 			actions.RemoveData.should.be.a.Function();
@@ -68,6 +90,23 @@ describe('Normalize actions', () => {
 		});
 	});
 
+	describe('RemoveChildData', () => {
+		it('should be exported', () => {
+			actions.RemoveChildData.should.be.a.Function();
+		});
+
+		it('should be serializable', () => {
+			const parentId = data[0].id;
+			checkSerialization(
+				new actions.RemoveChildData({
+					id: data[0].id,
+					parentSchema: schema,
+					parentId,
+					childSchema
+				})
+			);
+		});
+	});
 	describe('creator', () => {
 		const result = actions.actionCreators(schema);
 
@@ -106,6 +145,22 @@ describe('Normalize actions', () => {
 			});
 		});
 
+		describe('AddChildData creator', () => {
+			const action = result.addChildData(childData, childSchema, data[0].id);
+
+			it('should create an AddChildData action', () => {
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties('entities', 'result');
+				action.payload.entities.should.eql(
+					normalize(childData, [childSchema]).entities
+				);
+				action.payload.parentSchemaKey.should.eql('parent');
+				action.payload.parentProperty.should.eql('childs');
+				action.payload.parentId.should.eql(data[0].id);
+			});
+		});
+
 		describe('RemoveData creator', () => {
 			const id = 'some';
 			const result = actions.actionCreators(schema);
@@ -134,6 +189,29 @@ describe('Normalize actions', () => {
 				action.payload.should.have.properties('id', 'removeChildren');
 				action.payload.id.should.eql(id);
 				(action.payload.removeChildren === null).should.be.true();
+			});
+		});
+
+		describe('RemoveChildData creator', () => {
+			const action = result.removeChildData(
+				childData[0].id,
+				childSchema,
+				data[0].id
+			);
+
+			it('should create an RemoveChildData action', () => {
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties(
+					'parentProperty',
+					'parentSchemaKey',
+					'parentId',
+					'id'
+				);
+				action.payload.id.should.eql(childData[0].id);
+				action.payload.parentSchemaKey.should.eql('parent');
+				action.payload.parentProperty.should.eql('childs');
+				action.payload.parentId.should.eql(data[0].id);
 			});
 		});
 	});
