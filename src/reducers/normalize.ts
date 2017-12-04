@@ -41,16 +41,16 @@ export interface NormalizedState {
  */
 export interface NormalizedEntityState {
 	/**
-   * The original sorting of the unnormalized data.
-   * Holds all id's of the last set operation in original order.
-   * Can be used to restore the original sorting of entities
-   */
+	 * The original sorting of the unnormalized data.
+	 * Holds all id's of the last set operation in original order.
+	 * Can be used to restore the original sorting of entities
+	 */
 	result: string[];
 
 	/**
-   * The normalized entities. Should be passed to all projector functions
-   * to enable access to all entities needed.
-   */
+	 * The normalized entities. Should be passed to all projector functions
+	 * to enable access to all entities needed.
+	 */
 	entities: EntityMap;
 }
 
@@ -141,6 +141,35 @@ export function normalized(
 			};
 		}
 
+		case NormalizeActionTypes.UPDATE_DATA: {
+			const { id, key, changes, result } = action.payload;
+
+			if (!state.entities[key] || !state.entities[key][id]) {
+				return state;
+			}
+
+			const newEntities = { ...state.entities };
+			Object.entries(changes).forEach(([key, value]: [string, any]) => {
+				Object.entries(changes[key]).forEach(([id, obj]: [string, any]) => {
+					newEntities[key][id] = newEntities[key][id] || {};
+					Object.entries(changes[key][id]).forEach(
+						([property, value]: [string, any]) => {
+							if (Array.isArray(value)) {
+								newEntities[key][id][property].push(...value);
+							} else {
+								newEntities[key][id][property] = value;
+							}
+						}
+					);
+				});
+			});
+
+			return {
+				result,
+				entities: newEntities
+			};
+		}
+
 		case NormalizeActionTypes.REMOVE_DATA: {
 			const { id, key, removeChildren } = action.payload;
 			const entities = { ...state.entities };
@@ -151,16 +180,16 @@ export function normalized(
 			}
 
 			if (removeChildren) {
-				Object.entries(
-					removeChildren
-				).map(([key, entityProperty]: [string, string]) => {
-					const child = entity[entityProperty];
-					/* istanbul ignore else */
-					if (child && entities[key]) {
-						const ids = Array.isArray(child) ? child : [child];
-						ids.forEach((oldId: string) => delete entities[key][oldId]);
+				Object.entries(removeChildren).map(
+					([key, entityProperty]: [string, string]) => {
+						const child = entity[entityProperty];
+						/* istanbul ignore else */
+						if (child && entities[key]) {
+							const ids = Array.isArray(child) ? child : [child];
+							ids.forEach((oldId: string) => delete entities[key][oldId]);
+						}
 					}
-				});
+				);
 			}
 
 			delete entities[key][id];
@@ -256,23 +285,23 @@ export function createSchemaSelectors<T>(
 ): SchemaSelectors<T> {
 	return {
 		/**
-     * Select all entities, regardless of their schema, exported for convenience.
-     */
+		 * Select all entities, regardless of their schema, exported for convenience.
+		 */
 		getNormalizedEntities,
 
 		/**
-     * Select all entities and perform a denormalization based on the given schema.
-     */
+		 * Select all entities and perform a denormalization based on the given schema.
+		 */
 		getEntities: createEntitiesSelector<T>(schema),
 
 		/**
-     * Uses the given schema to denormalize an entity by the given id
-     */
+		 * Uses the given schema to denormalize an entity by the given id
+		 */
 		entityProjector: createEntityProjector<T>(schema),
 
 		/**
-     * Uses the given schema to denormalize all given entities
-     */
+		 * Uses the given schema to denormalize all given entities
+		 */
 		entitiesProjector: createEntitiesProjector<T>(schema)
 	};
 }

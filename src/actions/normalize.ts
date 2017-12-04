@@ -24,13 +24,13 @@ export interface SchemaMap {
  */
 export interface NormalizeActionPayload {
 	/**
-   * The normalized entities mapped to their schema keys
-   */
+	 * The normalized entities mapped to their schema keys
+	 */
 	entities: EntityMap;
 
 	/**
-   * The original sorted id's as an array
-   */
+	 * The original sorted id's as an array
+	 */
 	result: string[];
 }
 
@@ -39,19 +39,19 @@ export interface NormalizeActionPayload {
  */
 export interface NormalizeRemoveActionPayload {
 	/**
-   * The id of the entity that should be removed
-   */
+	 * The id of the entity that should be removed
+	 */
 	id: string;
 
 	/**
-   * The schema key of the entity that should be removed
-   */
+	 * The schema key of the entity that should be removed
+	 */
 	key: string;
 
 	/**
-     * If maps valid schema keys to propety names,
-     * children referenced by the schema key will be removed by its id
-     */
+	 * If maps valid schema keys to propety names,
+	 * children referenced by the schema key will be removed by its id
+	 */
 	removeChildren: SchemaMap | null;
 }
 
@@ -60,8 +60,8 @@ export interface NormalizeRemoveActionPayload {
  */
 export interface NormalizeActionSchemaConfig {
 	/**
-   * Schema definition of the entity. Used for de-/ and normalizing given entities.
-   */
+	 * Schema definition of the entity. Used for de-/ and normalizing given entities.
+	 */
 	schema: schema.Entity;
 }
 
@@ -70,8 +70,8 @@ export interface NormalizeActionSchemaConfig {
  */
 export interface NormalizeChildActionSchemaConfig {
 	/**
-   * Schema definition of the entity. Used for de-/ and normalizing given entities.
-   */
+	 * Schema definition of the entity. Used for de-/ and normalizing given entities.
+	 */
 	parentSchema: NormalizeActionSchemaConfig['schema'];
 }
 
@@ -81,9 +81,26 @@ export interface NormalizeChildActionSchemaConfig {
  */
 export interface NormalizeActionConfig<T> extends NormalizeActionSchemaConfig {
 	/**
-   * The array of entities which should be normalized and added to the store.
-   */
+	 * The array of entities which should be normalized and added to the store.
+	 */
 	data: T[];
+}
+
+/**
+ * Typed Interface for the config of the `AddData` and `SetData` action.
+ * Holds an typed array of entities to be added to the store.
+ */
+export interface NormalizeUpdateActionConfig<T>
+	extends NormalizeActionSchemaConfig {
+	/**
+	 * The id of the entity to update
+	 */
+	id: NormalizeRemoveActionPayload['id'];
+
+	/**
+	 * Data to set in the entity
+	 */
+	changes: Partial<T>;
 }
 
 /**
@@ -93,8 +110,8 @@ export interface NormalizeActionConfig<T> extends NormalizeActionSchemaConfig {
 export interface NormalizeChildActionConfigBase<T>
 	extends NormalizeChildActionSchemaConfig {
 	/**
-   * The array of entities which should be normalized and added to the store.
-   */
+	 * The array of entities which should be normalized and added to the store.
+	 */
 	data: T[];
 }
 
@@ -103,18 +120,18 @@ export interface NormalizeChildActionConfigBase<T>
  */
 export interface NormalizeChildActionPayload extends NormalizeActionPayload {
 	/**
-   * The id of the parent entity
-   */
+	 * The id of the parent entity
+	 */
 	parentId: string;
 
 	/**
-   * Key of the parent's property which holds the child references
-   */
+	 * Key of the parent's property which holds the child references
+	 */
 	parentProperty: string;
 
 	/**
-   * Schema key of the parent's property
-   */
+	 * Schema key of the parent's property
+	 */
 	parentSchemaKey: string;
 }
 
@@ -123,28 +140,28 @@ export interface NormalizeChildActionPayload extends NormalizeActionPayload {
  */
 export interface NormalizeRemoveChildActionPayload {
 	/**
-   * The id of the entity that should be removed
-   */
+	 * The id of the entity that should be removed
+	 */
 	id: NormalizeRemoveActionPayload['id'];
 
 	/**
-   * The key of the child schema
-   */
+	 * The key of the child schema
+	 */
 	childSchemaKey: string;
 
 	/**
-   * The id of the parent entity
-   */
+	 * The id of the parent entity
+	 */
 	parentId: NormalizeChildActionPayload['parentId'];
 
 	/**
-     * Key of the parent's property which holds the child references
-     */
+	 * Key of the parent's property which holds the child references
+	 */
 	parentProperty: NormalizeChildActionPayload['parentProperty'];
 
 	/**
-     * Schema key of the parent's property
-     */
+	 * Schema key of the parent's property
+	 */
 	parentSchemaKey: NormalizeChildActionPayload['parentSchemaKey'];
 }
 
@@ -155,14 +172,14 @@ export interface NormalizeRemoveChildActionPayload {
 export interface NormalizeRemoveActionConfig
 	extends NormalizeActionSchemaConfig {
 	/**
-   * The id of the entity that should be removed
-   */
+	 * The id of the entity that should be removed
+	 */
 	id: NormalizeRemoveActionPayload['id'];
 
 	/**
-   * If maps valid schema keys to propety names,
-   * children referenced by the schema key will be removed by its id
-   */
+	 * If maps valid schema keys to propety names,
+	 * children referenced by the schema key will be removed by its id
+	 */
 	removeChildren?: NormalizeRemoveActionPayload['removeChildren'];
 }
 
@@ -172,13 +189,13 @@ export interface NormalizeRemoveActionConfig
 export interface NormalizeChildActionConfig<T>
 	extends NormalizeChildActionConfigBase<T> {
 	/**
-   * The schema of the child data to add
-   */
+	 * The schema of the child data to add
+	 */
 	childSchema: schema.Entity;
 
 	/**
-   * The id of the parent entity
-   */
+	 * The id of the parent entity
+	 */
 	parentId: NormalizeChildActionPayload['parentId'];
 }
 
@@ -189,19 +206,44 @@ export interface NormalizeChildActionConfig<T>
 export interface NormalizeRemoveChildActionConfig
 	extends NormalizeChildActionSchemaConfig {
 	/**
-   * The id of the entity that should be removed
-   */
+	 * The id of the entity that should be removed
+	 */
 	id: NormalizeRemoveActionPayload['id'];
 
 	/**
-   * The schema of the child data to add
-   */
+	 * The schema of the child data to add
+	 */
 	childSchema: schema.Entity;
 
 	/**
-   * The id of the parent entity
-   */
+	 * The id of the parent entity
+	 */
 	parentId: NormalizeChildActionPayload['parentId'];
+}
+
+/**
+ * Payload of the `UpdateAction`
+ */
+export interface NormalizeUpdateActionPayload<T> {
+	/**
+	 * The id of the entity that should be removed
+	 */
+	id: NormalizeUpdateActionConfig<T>['id'];
+
+	/**
+	 * Schema key of the entity to update
+	 */
+	key: string;
+
+	/**
+	 * The data to set in the entity
+	 */
+	changes: EntityMap;
+
+	/**
+	 * The original sorted id's as an array
+	 */
+	result: string[];
 }
 
 /**
@@ -209,18 +251,18 @@ export interface NormalizeRemoveChildActionConfig
  */
 export interface NormalizeActionCreators<T> {
 	/**
-   * Action creator for the `SetData` action
-   */
+	 * Action creator for the `SetData` action
+	 */
 	setData: (data: NormalizeActionConfig<T>['data']) => SetData<T>;
 
 	/**
-   * Action creator for the `AddData` action
-   */
+	 * Action creator for the `AddData` action
+	 */
 	addData: (data: NormalizeActionConfig<T>['data']) => AddData<T>;
 
 	/**
-   * Action creator for the `AddChildData` action
-   */
+	 * Action creator for the `AddChildData` action
+	 */
 	addChildData: <C>(
 		data: NormalizeChildActionConfig<C>['data'],
 		childSchema: NormalizeChildActionConfig<C>['childSchema'],
@@ -228,16 +270,24 @@ export interface NormalizeActionCreators<T> {
 	) => AddChildData<C>;
 
 	/**
-   * Action creator for the `removeData` action
-   */
+	 * Action creator for the `AddChildData` action
+	 */
+	updateData: (
+		id: NormalizeUpdateActionConfig<T>['id'],
+		changes: NormalizeUpdateActionConfig<T>['changes']
+	) => UpdateData<T>;
+
+	/**
+	 * Action creator for the `removeData` action
+	 */
 	removeData: (
 		id: NormalizeRemoveActionConfig['id'],
 		removeChildren?: NormalizeRemoveActionConfig['removeChildren']
 	) => RemoveData;
 
 	/**
-   * Action creator for the `AddChildData` action
-   */
+	 * Action creator for the `AddChildData` action
+	 */
 	removeChildData: (
 		id: NormalizeRemoveChildActionConfig['id'],
 		childSchema: NormalizeRemoveChildActionConfig['childSchema'],
@@ -250,28 +300,33 @@ export interface NormalizeActionCreators<T> {
  */
 export class NormalizeActionTypes {
 	/**
-   * Action type of the `SetData` action.
-   */
+	 * Action type of the `SetData` action.
+	 */
 	static readonly SET_DATA = `${ACTION_NAMESPACE} Set Data`;
 
 	/**
-   * Action type of the `AddData` action.
-   */
+	 * Action type of the `AddData` action.
+	 */
 	static readonly ADD_DATA = `${ACTION_NAMESPACE} Add Data`;
 
 	/**
-   * Action type of the `AddChildData` action.
-   */
+	 * Action type of the `AddChildData` action.
+	 */
 	static readonly ADD_CHILD_DATA = `${ACTION_NAMESPACE} Add Child Data`;
 
 	/**
-   * Action type of the `RemoveData` action.
-   */
+	 * Action type of the `UpdateData` action
+	 */
+	static readonly UPDATE_DATA = `${ACTION_NAMESPACE} Update Data`;
+
+	/**
+	 * Action type of the `RemoveData` action.
+	 */
 	static readonly REMOVE_DATA = `${ACTION_NAMESPACE} Remove Data`;
 
 	/**
-   * Action type of the `RemoveChildData` action.
-   */
+	 * Action type of the `RemoveChildData` action.
+	 */
 	static readonly REMOVE_CHILD_DATA = `${ACTION_NAMESPACE} Remove Child Data`;
 }
 
@@ -281,20 +336,20 @@ export class NormalizeActionTypes {
  */
 export class SetData<T> implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.SET_DATA`
-   */
+	 * The action type: `NormalizeActionTypes.SET_DATA`
+	 */
 	readonly type = NormalizeActionTypes.SET_DATA;
 
 	/**
-   * The payload will be an object of the normalized entity map as `entities`
-   * and the original sorted id's as an array in the `result` property.
-   */
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
 	public payload: NormalizeActionPayload;
 
 	/**
-   * SetData Constructor
-   * @param config The action config object
-   */
+	 * SetData Constructor
+	 * @param config The action config object
+	 */
 	constructor(config: NormalizeActionConfig<T>) {
 		this.payload = normalize(config.data, [config.schema]);
 	}
@@ -306,20 +361,20 @@ export class SetData<T> implements Action {
  */
 export class AddData<T> implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.ADD_DATA`
-   */
+	 * The action type: `NormalizeActionTypes.ADD_DATA`
+	 */
 	readonly type = NormalizeActionTypes.ADD_DATA;
 
 	/**
-   * The payload will be an object of the normalized entity map as `entities`
-   * and the original sorted id's as an array in the `result` property.
-   */
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
 	public payload: NormalizeActionPayload;
 
 	/**
-   * AddData Constructor
-   * @param config The action config object
-   */
+	 * AddData Constructor
+	 * @param config The action config object
+	 */
 	constructor(config: NormalizeActionConfig<T>) {
 		this.payload = normalize(config.data, [config.schema]);
 	}
@@ -331,20 +386,20 @@ export class AddData<T> implements Action {
  */
 export class AddChildData<T> implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.ADD_CHILD_DATA`
-   */
+	 * The action type: `NormalizeActionTypes.ADD_CHILD_DATA`
+	 */
 	readonly type = NormalizeActionTypes.ADD_CHILD_DATA;
 
 	/**
-   * The payload will be an object of the normalized entity map as `entities`
-   * and the original sorted id's as an array in the `result` property.
-   */
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
 	public payload: NormalizeChildActionPayload;
 
 	/**
-   * AddData Constructor
-   * @param config The action config object
-   */
+	 * AddData Constructor
+	 * @param config The action config object
+	 */
 	constructor(config: NormalizeChildActionConfig<T>) {
 		const { data, parentSchema, parentId, childSchema } = config;
 		this.payload = {
@@ -357,25 +412,59 @@ export class AddChildData<T> implements Action {
 }
 
 /**
+ * Action for adding/updating data to the store.
+ * Also see `NormalizeDataPayload`.
+ */
+export class UpdateData<T> implements Action {
+	/**
+	 * The action type: `NormalizeActionTypes.UPDATE_DATA`
+	 */
+	readonly type = NormalizeActionTypes.UPDATE_DATA;
+
+	/**
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
+	public payload: NormalizeUpdateActionPayload<T>;
+
+	/**
+	 * AddData Constructor
+	 * @param config The action config object
+	 */
+	constructor(config: NormalizeUpdateActionConfig<T>) {
+		const { id, schema, changes } = config;
+		(changes as any)[(schema as any)._idAttribute] = id;
+		const normalized = normalize([config.changes], [config.schema]);
+
+		this.payload = {
+			id,
+			key: schema.key,
+			changes: normalized.entities,
+			result: normalized.result
+		};
+	}
+}
+
+/**
  * Action for removing data from the store.
  * Also see `NormalizeRemovePayload`.
  */
 export class RemoveData implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.REMOVE_DATA`
-   */
+	 * The action type: `NormalizeActionTypes.REMOVE_DATA`
+	 */
 	readonly type = NormalizeActionTypes.REMOVE_DATA;
 
 	/**
-   * The payload will be an object of the normalized entity map as `entities`
-   * and the original sorted id's as an array in the `result` property.
-   */
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
 	public payload: NormalizeRemoveActionPayload;
 
 	/**
-   * RemoveData Constructor
-   * @param payload The action payload used in the reducer
-   */
+	 * RemoveData Constructor
+	 * @param payload The action payload used in the reducer
+	 */
 	constructor(config: NormalizeRemoveActionConfig) {
 		let { id, removeChildren, schema } = config;
 		let removeMap: SchemaMap = null;
@@ -383,14 +472,15 @@ export class RemoveData implements Action {
 		// cleanup removeChildren object by setting only existing
 		// properties to removeMap
 		if (removeChildren && (schema as any).schema) {
-			removeMap = Object.entries(
-				removeChildren
-			).reduce((p: any, [key, entityProperty]: [string, string]) => {
-				if (entityProperty in (schema as any).schema) {
-					p[key] = entityProperty;
-				}
-				return p;
-			}, {});
+			removeMap = Object.entries(removeChildren).reduce(
+				(p: any, [key, entityProperty]: [string, string]) => {
+					if (entityProperty in (schema as any).schema) {
+						p[key] = entityProperty;
+					}
+					return p;
+				},
+				{}
+			);
 		}
 
 		this.payload = {
@@ -408,20 +498,20 @@ export class RemoveData implements Action {
  */
 export class RemoveChildData implements Action {
 	/**
-   * The action type: `NormalizeActionTypes.REMOVE_CHILD_DATA`
-   */
+	 * The action type: `NormalizeActionTypes.REMOVE_CHILD_DATA`
+	 */
 	readonly type = NormalizeActionTypes.REMOVE_CHILD_DATA;
 
 	/**
-   * The payload will be an object of the normalized entity map as `entities`
-   * and the original sorted id's as an array in the `result` property.
-   */
+	 * The payload will be an object of the normalized entity map as `entities`
+	 * and the original sorted id's as an array in the `result` property.
+	 */
 	public payload: NormalizeRemoveChildActionPayload;
 
 	/**
-   * RemoveData Constructor
-   * @param payload The action payload used in the reducer
-   */
+	 * RemoveData Constructor
+	 * @param payload The action payload used in the reducer
+	 */
 	constructor(config: NormalizeRemoveChildActionConfig) {
 		let { id, parentSchema, childSchema, parentId } = config;
 		this.payload = {
@@ -444,23 +534,23 @@ export function actionCreators<T>(
 ): NormalizeActionCreators<T> {
 	return {
 		/**
-     * Action creator for the `SetData` action.
-     * @returns A new instance of the `SetData` action with the given schema.
-     */
+		 * Action creator for the `SetData` action.
+		 * @returns A new instance of the `SetData` action with the given schema.
+		 */
 		setData: (data: NormalizeActionConfig<T>['data']) =>
 			new SetData<T>({ data, schema }),
 
 		/**
-     * Action creator for the `AddData` action.
-     * @returns A new instance of the `AddData` action with the given schema.
-     */
+		 * Action creator for the `AddData` action.
+		 * @returns A new instance of the `AddData` action with the given schema.
+		 */
 		addData: (data: NormalizeActionConfig<T>['data']) =>
 			new AddData<T>({ data, schema }),
 
 		/**
-     * Action creator for the `AddChildData` action.
-     * @returns A new instance of the `AddChildData` action with the given schema.
-     */
+		 * Action creator for the `AddChildData` action.
+		 * @returns A new instance of the `AddChildData` action with the given schema.
+		 */
 		addChildData: <C>(
 			data: NormalizeChildActionConfig<C>['data'],
 			childSchema: NormalizeChildActionConfig<C>['childSchema'],
@@ -474,18 +564,27 @@ export function actionCreators<T>(
 			}),
 
 		/**
-     * Action creator for the `RemoveData` action.
-     * @returns A new instance of the `RemoveData` action with the given schema.
-     */
+		 * Action creator for the `UpdateData` action.
+		 * @returns A new instance of the `UpdateData` action with the given schema.
+		 */
+		updateData: (
+			id: NormalizeUpdateActionConfig<T>['id'],
+			changes: NormalizeUpdateActionConfig<T>['changes']
+		) => new UpdateData({ id, schema, changes }),
+
+		/**
+		 * Action creator for the `RemoveData` action.
+		 * @returns A new instance of the `RemoveData` action with the given schema.
+		 */
 		removeData: (
 			id: NormalizeRemoveActionConfig['id'],
 			removeChildren?: NormalizeRemoveActionConfig['removeChildren']
 		) => new RemoveData({ id, schema, removeChildren }),
 
 		/**
-     * Action creator for the `RemoveChildData` action.
-     * @returns A new instance of the `RemoveChildData` action with the given schema.
-     */
+		 * Action creator for the `RemoveChildData` action.
+		 * @returns A new instance of the `RemoveChildData` action with the given schema.
+		 */
 		removeChildData: (
 			id: NormalizeRemoveChildActionConfig['id'],
 			childSchema: NormalizeRemoveChildActionConfig['childSchema'],

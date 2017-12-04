@@ -15,12 +15,14 @@ interface Child {
 interface Parent {
 	id: string;
 	property: string;
-	childs: [Child];
+	newProperty?: string;
+	childs: Child[];
 }
 
 describe('reducers', () => {
 	let data: Parent[];
 	let childData: Child[];
+	let changes: Partial<Parent>;
 
 	beforeEach(() => {
 		data = [
@@ -46,6 +48,7 @@ describe('reducers', () => {
 			{ id: '5', property: 'new-child-value-1' },
 			{ id: '6', property: 'new-child-value-2' }
 		];
+		changes = { newProperty: 'newValue', childs: childData };
 	});
 
 	describe('reducer function', () => {
@@ -67,7 +70,8 @@ describe('reducers', () => {
 				addAction2,
 				setAction1,
 				addChildAction1,
-				removeChildAction1;
+				removeChildAction1,
+				updateAction1;
 
 			beforeEach(() => {
 				addAction1 = new actions.AddData<Parent>({
@@ -93,6 +97,11 @@ describe('reducers', () => {
 					childSchema,
 					parentSchema: mySchema,
 					parentId: data[0].id
+				});
+				updateAction1 = new actions.UpdateData<Parent>({
+					id: data[0].id,
+					changes,
+					schema: mySchema
 				});
 			});
 
@@ -152,6 +161,35 @@ describe('reducers', () => {
 						[...childData, ...data[0].childs].map(c => c.id)
 					);
 					state.result.should.eql(childData.map(c => c.id));
+				});
+			});
+
+			describe('UpdateData', () => {
+				it('should update an entity in the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, updateAction1);
+					state.entities.should.have.properties('parent', 'child');
+					state.entities.parent.should.have.properties(data[0].id);
+					state.entities.parent[data[0].id].should.eql({
+						newProperty: changes.newProperty,
+						id: data[0].id,
+						property: data[0].property,
+						childs: [...data[0].childs, ...childData].map(c => c.id)
+					});
+				});
+
+				it('should update added child data in the store', () => {
+					let state = reducer.normalized(undefined, addAction1);
+					state = reducer.normalized(state, updateAction1);
+					state.entities.should.have.properties('parent', 'child');
+					state.result.should.eql([data[0].id]);
+					state.entities.parent[data[0].id].childs.should.eql(
+						[...data[0].childs, ...childData].map(c => c.id)
+					);
+
+					Object.keys(state.entities.child).should.eql(
+						[...data[0].childs, ...childData].map(c => c.id)
+					);
 				});
 			});
 

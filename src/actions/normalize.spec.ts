@@ -1,6 +1,6 @@
 import 'should';
 import { Action } from '@ngrx/store';
-import { schema as normalizrSchema, normalize } from 'normalizr';
+import { schema as normalizrSchema, normalize, schema } from 'normalizr';
 import * as actions from './normalize';
 
 describe('Normalize actions', () => {
@@ -74,6 +74,18 @@ describe('Normalize actions', () => {
 					parentId,
 					childSchema
 				})
+			);
+		});
+	});
+
+	describe('UpdateData', () => {
+		it('should be exported', () => {
+			actions.UpdateData.should.be.a.Function();
+		});
+
+		it('should be serializable', () => {
+			checkSerialization(
+				new actions.UpdateData({ id: data[0].id, changes: data, schema })
 			);
 		});
 	});
@@ -158,6 +170,33 @@ describe('Normalize actions', () => {
 				action.payload.parentSchemaKey.should.eql('parent');
 				action.payload.parentProperty.should.eql('childs');
 				action.payload.parentId.should.eql(data[0].id);
+			});
+		});
+
+		describe('UpdateData creator', () => {
+			const updateData = { newProperty: 'newValue', childs: childData };
+			const action = result.updateData(data[0].id, updateData);
+
+			it('should create an UpdateData action', () => {
+				action.should.be.an.Object();
+				action.should.have.properties('payload');
+				action.payload.should.have.properties('key', 'id', 'changes', 'result');
+
+				const expectedParent = {
+					id: data[0].id,
+					newProperty: updateData.newProperty,
+					childs: [...updateData.childs.map(c => c.id)]
+				};
+
+				action.payload.changes[schema.key][data[0].id].should.eql(
+					expectedParent
+				);
+				action.payload.changes[childSchema.key][childData[0].id].should.eql(
+					childData[0]
+				);
+				action.payload.changes[childSchema.key][childData[1].id].should.eql(
+					childData[1]
+				);
 			});
 		});
 
