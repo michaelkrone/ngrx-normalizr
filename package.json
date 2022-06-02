@@ -30,7 +30,7 @@
 	"devDependencies": {
 		"@angular/compiler": "^4.3.5",
 		"@angular/compiler-cli": "^4.3.5",
-		"@angular/core": "^4.3.5",
+		"@angular/core": "^11.0.5",
 		"@ngrx/store": "^4.0.3",
 		"@types/jasmine": "^2.5.53",
 		"@types/jasminewd2": "^2.0.2",
